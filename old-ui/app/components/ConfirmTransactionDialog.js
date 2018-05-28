@@ -3,17 +3,22 @@ import {Dialog, FlatButton} from "material-ui";
 import ConfirmTransaction from "./ConfirmTransaction";
 import * as actions from "../../../ui/app/actions";
 import {connect} from 'react-redux';
+const ethUtil = require('ethereumjs-util')
+const util = require('../util')
 
 class ConfirmTransactionDialog extends Component {
 
   constructor(props) {
     super(props)
+    this.state={
+      gasPrice:"0"
+    }
   }
 
   confirmTx=()=>{
     var tx=this.props.tx
     var gasPrice = new ethUtil.BN(util.bnTable.gwei)
-    gasPrice=gasPrice.mul(new ethUtil.BN(this.state.sliderValue))
+    gasPrice=gasPrice.mul(new ethUtil.BN(this.state.gasPrice))
     tx.txParams.gasPrice='0x' + gasPrice.toString('hex')
     this.props.dispatch(actions.updateAndApproveTx(tx))
   }
@@ -22,6 +27,11 @@ class ConfirmTransactionDialog extends Component {
     this.props.dispatch(actions.cancelTx(this.props.tx))
   }
 
+  setGasPrice=(gasPrice)=>{
+    this.setState({
+      gasPrice:gasPrice
+    })
+  }
   render() {
     var confirmTransactionActions=[
       <FlatButton label={"Cancel"} onClick={this.rejectTx}/>,
@@ -34,7 +44,7 @@ class ConfirmTransactionDialog extends Component {
         actions={confirmTransactionActions}
         open={this.props.open}
       >
-        <ConfirmTransaction tx={this.props.tx}/>
+        <ConfirmTransaction tx={this.props.tx} setGasPrice={this.setGasPrice}/>
       </Dialog>
     );
   }

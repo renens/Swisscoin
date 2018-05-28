@@ -20,20 +20,28 @@ class ConfirmTransaction extends Component {
     };
     var _this=this
 
-    this.props.dispatch(actions.getGasPrice()).then(function (result) {
-      var gasPrice = util.numericBalance(result)
-      gasPrice=gasPrice.div(util.bnTable.gwei)
-      _this.setState({sliderValue: gasPrice.toNumber()})
-
-    })
+    if(!this.props.tx.gasPriceSpecified) {
+      this.props.dispatch(actions.getGasPrice()).then(function (result) {
+        var gasPrice = util.numericBalance(result)
+        gasPrice = gasPrice.div(util.bnTable.gwei)
+        const defaultGasPrice = gasPrice.toNumber() + 2;
+        _this.setState({sliderValue: defaultGasPrice})
+        _this.props.setGasPrice(defaultGasPrice)
+      })
+    }
   }
 
   handleChange(evt) {
+    this.props.setGasPrice(evt.target.value)
     this.setState({
       sliderValue: evt.target.value
     });
   }
 
+  getGasPrice=()=>{
+    const tx = this.props.tx;
+    return tx.gasPriceSpecified?tx.txParams.gasPrice:this.state.sliderValue
+  }
   cancel=()=>{
     this.props.dispatch(actions.goHome())
   }
@@ -49,11 +57,12 @@ class ConfirmTransaction extends Component {
     }
   }
 
-  getFee = (_gasPrice,_estimateGas) => {
+  getFee = (_gasPrice,_estimateGas,gasPriceSpecifed) => {
     if(_gasPrice && _estimateGas) {
       var gasPrice = util.numericBalance(_gasPrice)
       var estGas = util.numericBalance(_estimateGas)
-      const estGasEth = gasPrice.mul(estGas).toNumber() / Math.pow(10, 9);
+      var toEth=gasPriceSpecifed?Math.pow(10, 9):Math.pow(10, 18)
+      const estGasEth = gasPrice.mul(estGas).toNumber() / toEth;
       return estGasEth
     }
     else {
@@ -67,7 +76,10 @@ class ConfirmTransaction extends Component {
     const toLength=firstTx.txParams.to.length
     var to=firstTx.txParams.to.slice(0,8)+"..."+firstTx.txParams.to.slice(toLength-8)
 
-    const ethFee=this.getFee(firstTx.txParams.gasPrice,firstTx.estimatedGas)
+    if(firstTx.txParams.gasPrice) {
+      this.props.setGasPrice(util.numericBalance(firstTx.txParams.gasPrice))
+    }
+    const ethFee=this.getFee(firstTx.txParams.gasPrice,firstTx.estimatedGas,firstTx.gasPriceSpecified)
     const usdFee=(ethFee*this.props.ethConversionRate).toFixed(2)
     return (
       <div className="confTx-container">

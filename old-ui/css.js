@@ -4,7 +4,7 @@ const path = require('path')
 module.exports = bundleCss
 
 var cssFiles = {
-  'style.css': fs.readFileSync(path.join(__dirname, '/app/css/style.css'), 'utf8'),
+  //'style.css': fs.readFileSync(path.join(__dirname, '/app/css/style.css'), 'utf8'),
   'slik.css': fs.readFileSync(path.join(__dirname, '/app/css/slick.min.css'), 'utf8'),
   'slick.theme.css': fs.readFileSync(path.join(__dirname, '/app/css/slick-theme.min.css'), 'utf8'),
  /* 'reset.css': fs.readFileSync(path.join(__dirname, '/app/css/reset.css'), 'utf8'),

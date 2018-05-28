@@ -14,28 +14,27 @@ import {Tabs, Tab, Dialog, FlatButton} from "material-ui";
 import * as actions from "../../../ui/app/actions";
 import ConfirmationSeeds from "./ConfirmationSeeds";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
+import Settings from "./Settings";
 const txHelper = require('../../lib/tx-helper')
 
 const tabStyle = {
   default_tab: {
-    color: '#FFFFFF',
-    backgroundColor: '#606060',
-    fontSize: 15,
+    color: '#7d878d',
+    backgroundColor: '#FFFFFF',
+    fontSize: 14,
     textTransform: 'capitalize',
     borderBottom: '2px solid #eee'
   },
   active_tab: {
     color: '#fbb03f',
-    backgroundColor: '#606060',
-    fontSize: 15,
+    backgroundColor: '#FFFFFF',
+    fontSize: 14,
     textTransform: 'capitalize',
   }
 };
 
 
 class Dashboard extends Component {
-
-
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +55,7 @@ class Dashboard extends Component {
 
   getBalances = () => {
     return <div>
-      <Tabs value={this.state.value} onChange={this.handleChange} inkBarStyle={{background: '#7055e9'}}>
+      <Tabs value={this.state.value} onChange={this.handleChange} inkBarStyle={{background: '#fbb03f'}}>
         <Tab value="a" style={this.getStyle("a" === this.state.value)} label="Balance"></Tab>
         <Tab value="b" style={this.getStyle("b" === this.state.value)} label="History"></Tab>
       </Tabs>
@@ -112,6 +111,10 @@ class Dashboard extends Component {
     else if (this.props.currentView.name === "accounts") {
       mainContainer = <Accounts/>
       page = "accounts"
+    }
+    else if(this.props.currentView.name==="config"){
+      mainContainer=<Settings/>
+      page = "settings"
     }
     else {
       mainContainer = this.getBalances()

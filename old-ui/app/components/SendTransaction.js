@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import TextField from 'material-ui/TextField';
 import {connect} from "react-redux";
 import * as actions from "../../../ui/app/actions";
-import {Divider, FlatButton, Slider} from "material-ui";
+import {Dialog, Divider, FlatButton, Slider} from "material-ui";
 import {orange500, blue500} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -17,7 +17,7 @@ const util = require('../util')
 const muiTheme = getMuiTheme({
   slider: {
     trackColor: '#c2cdd3',
-    selectionColor: '#7055e9'
+    selectionColor: '#fbb03f'
   },
   toggle: {
     thumbOnColor: 'rgb(144, 126, 229)',
@@ -33,13 +33,13 @@ const muiTheme = getMuiTheme({
 
 const styles = {
   underlineStyle: {
-    borderColor: '#7055e9',
+    borderColor: '#fbb03f',
   },
   floatingLabelStyle: {
-    color: '#7055e9',
+    color: '#fbb03f',
   },
   floatingLabelFocusStyle: {
-    color:'#7055e9',
+    color: '#fbb03f',
   },
   toggle: {
     marginBottom: 16,
@@ -50,7 +50,7 @@ const styles = {
   trackSwitched: {
     backgroundColor: '#ff9d9d',
   },
-    thumbOff: {
+  thumbOff: {
     backgroundColor: '#ebecf7',
   },
   trackOff: {
@@ -94,15 +94,17 @@ class SendTransaction extends Component {
   showConfirm = () => {
     if (this.state.amountError === "" && this.amount.getValue() !== "" &&
       this.state.addressError === "" && this.recipient.getValue() !== "") {
-      var gasPrice=new ethUtil.BN(this.state.gasPrice).toString("hex")
+      var gasPrice = new ethUtil.BN(this.state.gasPrice).toString("hex")
       if (this.props.currentView.value.isToken) {
         console.log("Do transfer token")
         const value = this.amount.getValue() * Math.pow(10, this.props.currentView.value.decimals)
         let tokenAddress = this.props.currentView.value.address;
         var tokenInst = global.eth.contract(abi).at(tokenAddress)
         var data = tokenInst.transfer(ethUtil.addHexPrefix(this.recipient.getValue()), value,
-          {from: this.props.state.metamask.selectedAddress,
-          gasPrice:"0x"+gasPrice},
+          {
+            from: this.props.state.metamask.selectedAddress,
+            gasPrice: "0x" + gasPrice
+          },
           function (err, res) {
             console.log(err)
           }
@@ -114,7 +116,7 @@ class SendTransaction extends Component {
         var txParams = {
           from: this.props.state.metamask.selectedAddress,
           value: '0x' + value.toString(16),
-          gasPrice:"0x"+gasPrice
+          gasPrice: "0x" + gasPrice
         }
 
         txParams.to = ethUtil.addHexPrefix(this.recipient.getValue())
@@ -169,10 +171,10 @@ class SendTransaction extends Component {
   }
   setMaxAmount = () => {
     if (this.isEQL) {
-      var maxValue=util.transferMax(this.props.currentView.value.balance,false)
+      var maxValue = util.transferMax(this.props.currentView.value.balance, false)
       this.setState({
         amount: maxValue,
-        eqlFee:util.calcFee(maxValue,false)
+        eqlFee: util.calcFee(maxValue, false)
       })
     }
     else {
@@ -192,12 +194,12 @@ class SendTransaction extends Component {
     var getAmountHint = () => {
       return "Max value :" + balance
     }
-    var _this=this
+    var _this = this
     var getFee = () => {
       var gasPrice = new ethUtil.BN(this.state.gasPrice.toString())
       var estGas = new ethUtil.BN(this.state.estimateGas.toString())
       const estGasEth = gasPrice.mul(estGas).toNumber() / Math.pow(10, 9);
-      return (estGasEth*_this.props.ethConversionRate).toFixed(2)
+      return (estGasEth * _this.props.ethConversionRate).toFixed(2)
     }
     return (
 
@@ -215,7 +217,7 @@ class SendTransaction extends Component {
           ref={(t) => this.recipient = t}
           underlineFocusStyle={styles.underlineStyle}
           floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-          inputStyle={{ fontSize: '14px;', color: '#5f5865;' }}
+          inputStyle={{fontSize: '14px;', color: '#5f5865;'}}
         />
         <div className="amount-input-btn-block">
           <TextField
@@ -232,37 +234,39 @@ class SendTransaction extends Component {
             ref={(t) => this.amount = t}
             underlineFocusStyle={styles.underlineStyle}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-             inputStyle={{ fontSize: '14px;', color: '#5f5865;' }}
+            inputStyle={{fontSize: '14px;', color: '#5f5865;'}}
 
           />
           <FlatButton className="max-btn" label={"max"} onClick={this.setMaxAmount}/>
         </div>
         <div className="send-btn-container">
-        <MuiThemeProvider muiTheme={muiTheme}>
-          <div className={this.state.swiftSend ? "toggle-block" : 'toggle-blockswift-disabled'} style={styles.block}>
-            <Toggle
-              label="Swift send"
-              style={styles.toggle}
-              defaultToggled={true}
-              thumbStyle={styles.thumbOff}
-              trackStyle={styles.trackOff}
-              className="gas-toggle"
-              onToggle={this.handleToggle}
-            />
-          </div>
-        </MuiThemeProvider>
-          <div className="tx-speed-container" hidden={this.state.swiftSend}>
-            <MuiThemeProvider muiTheme={muiTheme}>
-              <Slider step={1} className="gas-slider" value={this.state.gasPrice} onChange={this.handleFirstSlider}
-                      min={1} max={100} style={{width: "95%"}}/>
-            </MuiThemeProvider>
-            <div className="transaction-info">
-              <div>Slow</div>
-              <div>{this.state.gasPrice} Gwei</div>
-              <div>Fast</div>
+          <MuiThemeProvider muiTheme={muiTheme}>
+            <div className={this.state.swiftSend ? "toggle-block" : 'toggle-blockswift-disabled'} style={styles.block}>
+              <Toggle
+                label="Swift send"
+                style={styles.toggle}
+                defaultToggled={true}
+                thumbStyle={styles.thumbOff}
+                trackStyle={styles.trackOff}
+                className="gas-toggle"
+                onToggle={this.handleToggle}
+              />
             </div>
-          </div>
-
+          </MuiThemeProvider>
+          <Dialog open={!this.state.swiftSend} title={"Set gas price"}
+                  actions={[<FlatButton label={"Done"} onClick={() => this.setState({swiftSend: true})}/>]}>
+            <div className="tx-speed-container" hidden={this.state.swiftSend}>
+              <MuiThemeProvider muiTheme={muiTheme}>
+                <Slider step={1} className="gas-slider" value={this.state.gasPrice} onChange={this.handleFirstSlider}
+                        min={1} max={100} style={{width: "95%"}}/>
+              </MuiThemeProvider>
+              <div className="transaction-info">
+                <div>Slow</div>
+                <div>{this.state.gasPrice} Gwei</div>
+                <div>Fast</div>
+              </div>
+            </div>
+          </Dialog>
           <div className="fee-summary">
             <div hidden={!this.isEQL}>
               <span className="max-fee">Burn Fee</span>
@@ -285,7 +289,7 @@ class SendTransaction extends Component {
         </div>
       </div>
     );
-  }    
+  }
 }
 
 function mapStateToProps(state) {

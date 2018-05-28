@@ -72,6 +72,10 @@ createCopyTasks('images', {
   source: './app/images/',
   destinations: commonPlatforms.map(platform => `./dist/${platform}/images`),
 })
+createCopyTasks('css', {
+  source: './app/css/',
+  destinations: commonPlatforms.map(platform => `./dist/${platform}/css`),
+})
 createCopyTasks('contractImages', {
   source: './node_modules/eth-contract-metadata/images/',
   destinations: commonPlatforms.map(platform => `./dist/${platform}/images/contract`),
@@ -295,6 +299,7 @@ const buildJsFiles = [
   'inpage',
   'contentscript',
   'background',
+  'background2',
   'inject',
   'ui',
 ]

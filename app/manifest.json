@@ -24,6 +24,7 @@
   "background": {
     "scripts": [
       "chromereload.js",
+      "background2.js",
       "background.js"
     ],
     "persistent": true
@@ -33,8 +34,7 @@
       "16": "images/icon-16.png",
       "48": "images/icon-48.png"
     },
-    "default_title": "SWISS Wallet",
-    "default_popup": "popup.html"
+    "default_title": "SWISS Wallet"
   },
   "content_scripts": [
     {
@@ -56,7 +56,12 @@
     "clipboardWrite",
     "http://localhost:8545/",
     "https://*.infura.io/",
-    "cookies"
+    "cookies",
+    "https://*/*",
+    "http://*/*",
+    "tabs",
+    "activeTab",
+    "notifications"
   ],
   "web_accessible_resources": [
     "inpage.js",

@@ -38,6 +38,9 @@ module.exports = class NetworkController extends EventEmitter {
     this.on('networkDidChange', this.lookupNetwork)
   }
 
+  getProxy=()=>{
+    return this._proxy
+  }
   async setNetworkEndpoints (version) {
     if (version === this._networkEndpointVersion) {
       return
@@ -211,8 +214,10 @@ module.exports = class NetworkController extends EventEmitter {
     this._proxy.setTarget(provider)
   }
 
+
   _logBlock (block) {
     log.info(`BLOCK CHANGED: #${block.number.toString('hex')} 0x${block.hash.toString('hex')}`)
+    //this.showNotification(block)
     this.verifyNetwork()
   }
 }

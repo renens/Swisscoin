@@ -103,6 +103,7 @@ ConfigManager.prototype.setTutorialReaded = function (done) {
   data.readedTutorial=done
   this.setData(data)
 }
+
 // Takes a boolean
 ConfigManager.prototype.setShowSeedWords = function (should) {
   var data = this.getData()

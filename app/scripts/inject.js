@@ -3,7 +3,6 @@
   // just place a div at top right
   var d=document.getElementById("app-content-iframe-2")
   if(!d) {
-
     var tint = document.createElement('div');
     tint.style.backgroundColor="#7c778c4d";
     tint.style.position="fixed";
@@ -20,16 +19,18 @@
     wrapper.style.overflow="hidden";
     wrapper.style.position = 'fixed';
     wrapper.style.zIndex="99999999";
-    wrapper.style.width="330px";
-    wrapper.style.height="600px";
+    wrapper.style.width="335px";
+    wrapper.style.height="605px";
     wrapper.style.top = "20px";
     wrapper.style.right = "20px";
+    var imageUrl=chrome.runtime.getURL("/images/loading.gif");
+    console.warn("Home url "+imageUrl)
     wrapper.innerHTML = "<div style='position: absolute; width: 100%; z-index: -1;'><div style=' margin:auto; display:block; width: 100px; margin-top: 240px;' ><img style='width:100px' src='https://www.cryptokitties.co/images/ether-diamond.gif'></div></div>";
 
     wrapper.style.backgroundColor="#fff";
     var iframe = document.createElement('iframe');
-    iframe.style.width="330px";
-    iframe.style.height="600px";
+    iframe.style.width="335px";
+    iframe.style.height="605px";
     iframe.style.border="0px";
     iframe.src=chrome.runtime.getURL("popup.html")
     iframe.id = "app-content-iframe"

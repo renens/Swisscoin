@@ -17,14 +17,14 @@ import IconSettings from 'material-ui/svg-icons/action/lock';
 
 const tabStyle = {
     default_tab:{
-      color: '#FFFFFF',
-      backgroundColor: '#606060',
+      color: '#7d878d',
+      backgroundColor: '#FFFFFF',
         fontSize: 15,
         textTransform: 'capitalize',
     },
     active_tab:{
       color: '#fbb03f',
-      backgroundColor: '#606060',
+      backgroundColor: '#FFFFFF',
         fontSize: 15,
         textTransform: 'capitalize',
     }
@@ -32,7 +32,7 @@ const tabStyle = {
 
 const iconStyle = {
     default_tab:{
-        color: '#FFFFFF',
+        color: '#9fa6ad',
     },
     active_tab:{
         color: '#fbb03f',

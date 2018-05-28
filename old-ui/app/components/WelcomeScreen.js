@@ -33,7 +33,7 @@ class WelcomeScreen extends Component {
           <LandingSlide title="Receive" image="./images/swiss.png" desc="Receive Ethereum and any ERC20 token." />
         </Slider>
         <div className="pagination">
-            <FlatButton className="skip-tutorial" label={"skip"} onClick={this.skipTutorial} labelStyle={{color:"white"}}/>
+            <FlatButton className="skip-tutorial" label={"skip"} onClick={this.skipTutorial} labelStyle={{background:"#ededed"}}/>
         </div>
       </div>
     );

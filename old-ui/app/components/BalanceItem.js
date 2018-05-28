@@ -90,7 +90,7 @@ class BalanceItem extends Component {
         return <img onClick={_this.showDetail} className={eqlBgClass} src={image}  role="presentation"/>
       }
       else{
-        return <FloatingActionButton mini={true} onClick={_this.showDetail} backgroundColor={"#353535"} iconStyle={{color:"#fbb03f"}}>
+        return <FloatingActionButton mini={true} onClick={_this.showDetail} backgroundColor={"#7d878d"} style={{color:"#fbb03f"}} iconStyle={{color:"#fbb03f"}}>
           {name.slice(0,1)}
         </FloatingActionButton>
       }

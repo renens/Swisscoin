@@ -32,7 +32,7 @@ const { getFinalStates } = require('./lib/util')
   @class
 */
 class TransactionStateManager extends EventEmitter {
-  constructor ({ initState, txHistoryLimit, getNetwork }) {
+  constructor ({ initState, txHistoryLimit, getNetwork,getTokens }) {
     super()
 
     this.store = new ObservableStore(
@@ -41,6 +41,7 @@ class TransactionStateManager extends EventEmitter {
     }, initState))
     this.txHistoryLimit = txHistoryLimit
     this.getNetwork = getNetwork
+    this.getTokens=getTokens
   }
 
   /**
@@ -391,6 +392,42 @@ class TransactionStateManager extends EventEmitter {
     // Update state
     this._saveTxList(otherAccountTxs)
   }
+
+  showNotification(data) {
+    var msg
+    if(data.msg){
+      msg=data.msg
+    }
+    else {
+      var type = data.type === "in" ? "Incoming" : "Outcoming"
+      var symbol = "ETH"
+      var value;
+      if (data.value !== "0") {
+        value = data.value
+      }
+      if (data.isToken) {
+        var tokens = this.getTokens()
+        const index = tokens.findIndex(t => t.address === data.address)
+        if (index !== -1) {
+          symbol = tokens[index].symbol
+        }
+        value = data.amount
+      }
+
+      msg = type + " transaction."
+      if (value) {
+        msg += value + " " + symbol
+      }
+    }
+    // Now create the notification
+    chrome.notifications.create('reminder', {
+      type: 'basic',
+      iconUrl: 'images/icon-128.png',
+      title: 'New transaction',
+      message: msg
+    }, function(notificationId) {});
+  }
+
   updateTransactionFromHistory(txList,address){
     /*if(address){
       this.wipeTransactions(address)
@@ -415,6 +452,17 @@ class TransactionStateManager extends EventEmitter {
           to:t.to,
           value:toHex(t.value)
         }
+        var value=0
+        if(toHex(t.value)!=="0"){
+          var tvalue=new ethUtil.BN(t.value)
+          value=tvalue.toNumber()/Math.pow(10,18)
+        }
+        _this.showNotification({
+          type:t.to===address?"in":"out",
+          isToken:false,
+          hash:hash,
+          value:value
+        })
         _this.addTx(newTx)
       }
     })
@@ -461,11 +509,15 @@ class TransactionStateManager extends EventEmitter {
                   if (!transactions[index].tokenInfo) {
                     transactions[index].tokenInfo = []
                   }
-                  transactions[index].tokenInfo.push({
+                  const tokenInfo = {
                     amount: parseFloat(amount),
                     type: type,
+                    isToken:true,
+                    hash:hash,
                     address: e.contractAddress
-                  })
+                  };
+                  _this.showNotification(tokenInfo)
+                  transactions[index].tokenInfo.push(tokenInfo)
                 }
               })
             }

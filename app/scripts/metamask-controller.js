@@ -59,6 +59,7 @@ module.exports = class MetamaskController extends EventEmitter {
 
     this.defaultMaxListeners = 20
 
+    var _this=this
     this.sendUpdate = debounce(this.privateSendUpdate.bind(this), 200)
     this.opts = opts
     const initState = opts.initState || {}
@@ -163,11 +164,19 @@ module.exports = class MetamaskController extends EventEmitter {
       provider: this.provider,
       blockTracker: this.blockTracker,
       getGasPrice: this.getGasPrice.bind(this),
+      getTokens:this.preferencesController.getTokens.bind(this.preferencesController)
     })
     this.txController.on('newUnapprovedTx', opts.showUnapprovedTx.bind(opts))
     this.txController.on('updateTokenTx',function () {
       console.log("update token TX")
       this.preferencesController.fetchAllTokens(this.preferencesController.getSelectedAddress())
+    })
+    this.networkController.getProxy().on('block',function (block) {
+      _this.txController.updateTxs(block,function(hasNewTx){
+        if(hasNewTx){
+          _this.preferencesController.fetchAllTokens(this.preferencesController.getSelectedAddress())
+        }
+      })
     })
     // computed balances (accounting for pending transactions)
     this.balancesController = new BalancesController({
@@ -415,7 +424,10 @@ module.exports = class MetamaskController extends EventEmitter {
       tutorialReaded: nodeify(this.tutorialReaded, this),
       isTutorialReaded: nodeify(this.isTutorialReaded, this),
       getTokenInfo:nodeify(this.getTokenInfo, this),
-      getTokenBalance:nodeify(this.getTokenBalance,this)
+      getTokenBalance:nodeify(this.getTokenBalance,this),
+      setTheme:nodeify(this.setTheme,this),
+      setNotification:nodeify(this.setNotification,this),
+      showNotification:nodeify(this.showNotification,this)
     }
   }
 
@@ -1209,6 +1221,26 @@ module.exports = class MetamaskController extends EventEmitter {
 
   }
 
+  setNotification(notification) {
+    const _this = this
+    return new Promise(function (resolve, reject) {
+      _this.preferencesController.setNotification(notification)
+      resolve(true)
+    })
+
+  }
+
+  showNotification(msg){
+    this.txController.txStateManager.showNotification({msg:msg})
+  }
+  setTheme(theme) {
+    const _this = this
+    return new Promise(function (resolve, reject) {
+      _this.preferencesController.setTheme(theme)
+      resolve(true)
+    })
+
+  }
   isTutorialReaded() {
     return this.configManager.getReadedTutorial()
   }

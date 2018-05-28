@@ -40,8 +40,10 @@ class App extends Component {
     }
     return (
       //
-      <MuiThemeProvider muiTheme={getMuiTheme(swTheme)}>
-        <div>
+      <MuiThemeProvider>
+
+        <div style={{overflow:"hidden"}}>
+          <link rel="stylesheet" href="/css/style.css"/>
           {mainComponent}
         </div>
       </MuiThemeProvider>

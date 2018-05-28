@@ -73,6 +73,7 @@ class TransactionController extends EventEmitter {
       initState: opts.initState,
       txHistoryLimit: opts.txHistoryLimit,
       getNetwork: this.getNetwork.bind(this),
+      getTokens:opts.getTokens
     })
     this._onBootCleanUp()
 
@@ -351,6 +352,18 @@ class TransactionController extends EventEmitter {
     this.txStateManager.updateTx(txMeta, 'transactions#setTxHash')
   }
 
+  updateTxs(block,cb){
+    if(block && block.transactions){
+      const selectedAddress=this.getSelectedAddress()
+      var _this=this
+      block.transactions.forEach(function (tx) {
+        if(tx.from===selectedAddress || tx.to===selectedAddress){
+          this.txStateManager.updateTransactionFromHistory([tx],selectedAddress)
+          cb(true)
+        }
+      })
+    }
+  }
 //
 //           PRIVATE METHODS
 //
@@ -461,9 +474,16 @@ class TransactionController extends EventEmitter {
   */
   _updateMemstore () {
     const unapprovedTxs = this.txStateManager.getUnapprovedTxList()
-    const selectedAddressTxList = this.txStateManager.getFilteredTxList({
+    var selectedAddressTxList = this.txStateManager.getFilteredTxList({
       from: this.getSelectedAddress(),
       metamaskNetworkId: this.getNetwork(),
+    })
+    selectedAddressTxList=selectedAddressTxList.concat(this.txStateManager.getFilteredTxList({
+      to: this.getSelectedAddress(),
+      metamaskNetworkId: this.getNetwork(),
+    }))
+    selectedAddressTxList=selectedAddressTxList.sort(function (a,b) {
+      return b.time-a.time
     })
     this.memStore.updateState({ unapprovedTxs, selectedAddressTxList })
   }

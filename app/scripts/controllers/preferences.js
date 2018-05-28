@@ -28,7 +28,9 @@ class PreferencesController {
       useBlockie: false,
       featureFlags: {},
       tokenTransfer:[],
-      currentLocale: opts.initLangCode
+      currentLocale: opts.initLangCode,
+      notification:false,
+      theme:"classic"
     }, opts.initState)
     this.query = new EthQuery(opts.provider)
     if(opts.initState) {
@@ -306,6 +308,13 @@ class PreferencesController {
     return Promise.resolve(updatedFeatureFlags)
   }
 
+  setNotification=(val)=>{
+    this.store.updateState({notification:val})
+  }
+
+  setTheme=(val)=>{
+    this.store.updateState({theme:val})
+  }
   /**
    * A getter for the `featureFlags` property
    *

@@ -111,7 +111,7 @@
     max-width: 330px;
     height: 600px;
     margin: auto;
-    background: #353535;
+    background: #ffffff;
 }
 
 /*** Title ***/
@@ -126,7 +126,7 @@
     line-height: 150px;
     text-align: center;
     transform: translate3d(0, 0, 0);
-    color: white;
+    color: #fcb040;
     letter-spacing: .05em;
     font-size: 31px;
     text-shadow: 0 1px 0 rgba(black, .1);
@@ -157,7 +157,7 @@
 img.floating-logos {
 	position: absolute;
 	width: 30px;
-	opacity: 0.3
+	opacity: 0.8
 }
 
 img.float-0 {
@@ -186,14 +186,14 @@ img.float-3 {
 img.float-4 {
     left: 150px;
     top: 185px;
-    opacity: 0.4;
+    opacity: 0.8;
     animation: float 10s ease-in-out infinite;
 }
 
 img.float-5 {
     left: 243px;
     top: 130px;
-    opacity: 0.4;
+    opacity: 0.8;
     animation: float 10s ease-in-out infinite;
 }
 
@@ -262,7 +262,7 @@ img.float-5 {
 /*** Description ***/
 
 .description {
-	color: #c2cdd3;
+	color: #000000;
     font-weight: 400;
     position: absolute;
     padding: 30px;
@@ -375,7 +375,7 @@ img.nav-icon {
 
 .balance-section span {
   font-size: 13px;
-  color: #ffffffa1;
+  color: #000000;
 }
 
 .eth-balance {
@@ -387,7 +387,7 @@ img.nav-icon {
 .balance {
   margin-top: 5px;
   margin-bottom: 5px;
-  color: #fff;
+  color: black;
   font-weight: 500;
   font-size: 20px;
   position: relative;
@@ -406,7 +406,7 @@ img.nav-icon {
 }
 
 .wallet-address-container span {
-  background-color: #7055e9;
+  background-color: #fbb03f;
   border-radius: 22px;
   padding: 3px 11px 4px;
   transition: 0.4s;
@@ -432,7 +432,7 @@ img.nav-icon {
   margin: auto;
   font-size: 11px;
   border-radius: 11px;
-  color: #ffffff;
+  color: #fbb03f;
   float: left;
   cursor: pointer;
 }
@@ -503,12 +503,12 @@ span.percent-up {
 .token-list ul li {
   width: calc(100% - 30px);
   list-style: none;
-  border-bottom: 0px solid #606060;
+  border-bottom: 0px solid #fafafa;
   padding: 15px;
   height: 36px;
   margin: auto;
   margin-top: 0px;
-  background-color: #606060;
+  background-color: #ffffff;
   border-radius: 1px;
 }
 .token-list .simplebar-content{
@@ -523,10 +523,10 @@ span.percent-up {
 }
 
 .token-list ul li button {
-  background: #353535;
+  background: #fbb03f;
   border: 0px;
   padding: 6px 8px;
-  color: #fbb03f!important;
+  color: #d8e3e9!important;
   float: right;
   margin-top: 1px;
   border: 0px;
@@ -577,12 +577,12 @@ i.fas.fa-ellipsis-v {
 
 .token-amount {
   font-size: 13px;
-  color: #FFFFFF;
+  color: #010101;
 }
 
 .transfer-date{
   font-size: 12px;
-  color: #FFFFFF;
+  color: #111111;
   margin-top: 4px;
 }
 
@@ -598,7 +598,7 @@ i.fas.fa-ellipsis-v {
 
 .currency-value {
   font-weight: 400;
-  color: #FFFFFF;
+  color: #7d878d;
 }
 
 .fas.fa-arrow-down {
@@ -1443,7 +1443,7 @@ i.fas.fa-ellipsis-v {
 .direction {
   width: 36px;
   height: 36px;
-  border-radius: 9px;
+  border-radius: 50%;
   float: left;
   position: relative;
 }
@@ -1469,6 +1469,17 @@ i.fas.fa-ellipsis-v {
   color: #f1278e;
 }
 
+.direction-call svg {
+  padding: 11px 13px;
+  font-size: 14px;
+  color: #6127f18c;
+}
+
+.direction svg {
+  padding: 11px 12px;
+  font-size: 15px;
+}
+
 .transaction-list .token-name {
   white-space: nowrap;
   overflow: hidden;
@@ -1488,7 +1499,7 @@ i.fas.fa-ellipsis-v {
 
 .tx-amount {
   float: right;
-  color: #fff;
+  color: #000000;
   font-size: 14px;
   margin-top: 5px;
 }
@@ -1610,7 +1621,7 @@ i.fas.fa-ellipsis-v {
   position: absolute;
   top: 20%;
   left: 50%;
-  background: #606060;
+  background: #ececec;
   width: 500px;
   height: 500px;
   margin-left: -250px;
@@ -1625,7 +1636,7 @@ i.fas.fa-ellipsis-v {
   position: absolute;
   top: 48%;
   left: 50%;
-  background: #606060;
+  background: #ececec;
   width: 600px;
   height: 608px;
   margin-left: -300px;
@@ -1712,4 +1723,12 @@ i.fas.fa-ellipsis-v {
 
 .wallet-block{
   color: #fbb03f;
+}
+
+.toggle-block {
+  margin-bottom: 15px;
+}
+
+.toggle-block.swift-disabled label {
+  text-decoration: line-through;
 }
