@@ -29,7 +29,7 @@ class Balance extends Component {
   }
   calcUsdBalance = (hexValue) => {
     var balance = parseFloat(this.getEthBalance(hexValue))
-    return balance * this.props.ethConversionRate
+    return balance * this.props.conversionRate
   }
 
   render() {
@@ -90,7 +90,7 @@ function mapStateToProps(state) {
   return {
     state: state,
     accounts: state.metamask.accounts,
-    ethConversionRate: state.metamask.conversionRate
+    conversionRate: state.metamask.conversionRate
   }
 }
 

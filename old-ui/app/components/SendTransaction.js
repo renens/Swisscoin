@@ -199,8 +199,14 @@ class SendTransaction extends Component {
       var gasPrice = new ethUtil.BN(this.state.gasPrice.toString())
       var estGas = new ethUtil.BN(this.state.estimateGas.toString())
       const estGasEth = gasPrice.mul(estGas).toNumber() / Math.pow(10, 9);
-      return (estGasEth * _this.props.ethConversionRate).toFixed(2)
+      return (estGasEth * _this.props.conversionRate).toFixed(2)
     }
+
+    var getCurrencySymbol=()=>{
+      return this.props.currencySymbol?this.props.currencySymbol:"$"
+    }
+
+    //<FlatButton className="max-btn" label={"max"} onClick={this.setMaxAmount}/>
     return (
 
       <div className="send-container">
@@ -237,25 +243,10 @@ class SendTransaction extends Component {
             inputStyle={{fontSize: '14px;', color: '#5f5865;'}}
 
           />
-          <FlatButton className="max-btn" label={"max"} onClick={this.setMaxAmount}/>
+
         </div>
         <div className="send-btn-container">
-          <MuiThemeProvider muiTheme={muiTheme}>
-            <div className={this.state.swiftSend ? "toggle-block" : 'toggle-blockswift-disabled'} style={styles.block}>
-              <Toggle
-                label="Swift send"
-                style={styles.toggle}
-                defaultToggled={true}
-                thumbStyle={styles.thumbOff}
-                trackStyle={styles.trackOff}
-                className="gas-toggle"
-                onToggle={this.handleToggle}
-              />
-            </div>
-          </MuiThemeProvider>
-          <Dialog open={!this.state.swiftSend} title={"Set gas price"}
-                  actions={[<FlatButton label={"Done"} onClick={() => this.setState({swiftSend: true})}/>]}>
-            <div className="tx-speed-container" hidden={this.state.swiftSend}>
+            <div className="tx-speed-container">
               <MuiThemeProvider muiTheme={muiTheme}>
                 <Slider step={1} className="gas-slider" value={this.state.gasPrice} onChange={this.handleFirstSlider}
                         min={1} max={100} style={{width: "95%"}}/>
@@ -266,14 +257,13 @@ class SendTransaction extends Component {
                 <div>Fast</div>
               </div>
             </div>
-          </Dialog>
           <div className="fee-summary">
             <div hidden={!this.isEQL}>
               <span className="max-fee">Burn Fee</span>
               <span className="fee-eth">{this.state.eqlFee}</span>EQL
             </div>
             <span className="max-fee">Min Network Fee</span>
-            <span className="usd-fee">{getFee()}</span> USD
+            <span className="usd-fee">{getFee()}</span> {getCurrencySymbol()}
           </div>
 
           <div className="transaction-btn-container">
@@ -297,7 +287,8 @@ function mapStateToProps(state) {
     state: state,
     currentView: state.appState.currentView,
     tokens: state.metamask.tokens,
-    ethConversionRate: state.metamask.conversionRate
+    conversionRate: state.metamask.conversionRate,
+    currencySymbol: state.metamask.currencySymbol,
   }
 }
 

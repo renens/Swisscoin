@@ -45,8 +45,10 @@ class Header extends Component {
         }
       })
     }
-    usdBalance = totalEth * _this.props.ethConversionRate
-
+    usdBalance = totalEth * _this.props.conversionRate
+    var getCurrencySymbol=()=>{
+        return this.props.currencySymbol?this.props.currencySymbol:"$"
+    }
     return (
       <div>
         <div className="wave -one"/>
@@ -58,7 +60,7 @@ class Header extends Component {
         </div>
         <div className="balance-section">
           <span>Total Balance</span>
-          <div className="balance">${usdBalance.toFixed(2)}</div>
+          <div className="balance">{getCurrencySymbol()} {usdBalance.toFixed(2)}</div>
           <div className="balance balance-eth">
             {totalEth.toFixed(6)} ETH
           </div>
@@ -75,7 +77,8 @@ function mapStateToProps(state) {
     selectedAddress: state.metamask.selectedAddress,
     contractExchangeRates: state.metamask.contractExchangeRates,
     accounts: state.metamask.accounts,
-    ethConversionRate: state.metamask.conversionRate
+    conversionRate: state.metamask.conversionRate,
+    currencySymbol: state.metamask.currencySymbol,
   }
 }
 

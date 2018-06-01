@@ -23,8 +23,10 @@ class HistoryItem extends Component {
   }
 
   showTx = () => {
-    var url = explorerLink(this.props.tx.hash, 1)
-    global.platform.openWindow({url})
+    if(this.props.txInfo.fullHash) {
+      var url = explorerLink(this.props.txInfo.fullHash, 1)
+      global.platform.openWindow({url})
+    }
   }
 
   render() {
@@ -76,6 +78,9 @@ class HistoryItem extends Component {
         return <div className={symbol ? 'token-name history-token-name' : 'token-name'}>Contract</div>
       }
     }
+    var getCurrencySymbol=()=>{
+      return this.props.currencySymbol?this.props.currencySymbol:"$"
+    }
 
     return (
       <div onClick={this.showTx}>
@@ -87,8 +92,8 @@ class HistoryItem extends Component {
         </div>
         <div className="tx-price-block">
           {usdValue && (
-            <div className={txClass}>${usdValue}
-              <span className="symbol"> USD</span>
+            <div className={txClass}>{usdValue}
+              <span className="symbol"> {getCurrencySymbol()}</span>
             </div>
           )}
           <div className="tx-amount crypto-amount">{value || ''}
@@ -105,7 +110,8 @@ function mapStateToProps(state) {
     state: state,
     tokens: state.metamask.tokens,
     contractExchangeRates: state.metamask.contractExchangeRates,
-    ethConversionRate: state.metamask.conversionRate
+    conversionRate: state.metamask.conversionRate,
+    currencySymbol: state.metamask.currencySymbol,
   }
 }
 

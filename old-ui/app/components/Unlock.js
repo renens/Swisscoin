@@ -31,11 +31,11 @@ class Unlock extends Component {
         <div className="title">
           <span className="app-title">SWISS</span>
           <div className="powered-by">
-            <span>Powered by the <br /> SWISS Network Token </span>
+            <span>SWISSWALLET</span>
           </div>
         </div>
         <div className="imagery-container">
-          <img className="float float-0" src="./images/eql-white-2.png" role="presentation" />
+          <img className="float float-0" src="./images/eql-white.png" role="presentation" />
           <img className="float floating-logos float-1" src="./images/ethereum-logo.png" role="presentation" />
           <img className="float floating-logos float-2" src="./images/0x-logo.png" role="presentation" />
           <img className="float floating-logos float-3" src="./images/augur-logo.png" role="presentation" />

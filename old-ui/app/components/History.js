@@ -40,7 +40,7 @@ class History extends Component {
       else {
         type = "in"
       }
-      usdValue = (value * this.props.ethConversionRate).toFixed(2)
+      usdValue = (value * this.props.conversionRate).toFixed(2)
       symbol = "ETH"
     }
     if (tx.tokenInfo && tx.tokenInfo.length > 0) {
@@ -66,7 +66,8 @@ class History extends Component {
       hash: transactionId,
       date: date,
       usdValue: usdValue,
-      symbol: symbol
+      symbol: symbol,
+      fullHash:tx.hash
     }
   }
 
@@ -92,7 +93,7 @@ function mapStateToProps(state) {
     transactions: state.metamask.selectedAddressTxList,
     tokens: state.metamask.tokens,
     contractExchangeRates: state.metamask.contractExchangeRates,
-    ethConversionRate: state.metamask.conversionRate
+    conversionRate: state.metamask.conversionRate
   }
 }
 

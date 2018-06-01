@@ -11,7 +11,13 @@ class WelcomeScreen extends Component {
   skipTutorial=()=>{
     var _this=this
     this.props.dispatch(actions.tutorialReaded(true)).then(function () {
-      _this.props.dispatch(actions.goHome())
+      _this.props.dispatch(actions.isTutorialReaded()).then(function (val) {
+        console.log(val)
+        if(val){
+          _this.props.dispatch(actions.goHome())
+        }
+      })
+
     })
   }
 

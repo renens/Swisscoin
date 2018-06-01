@@ -106,7 +106,7 @@ class Dashboard extends Component {
     else if (/*this.props.currentView.name === "confTx" &&*/ firstTx) {
       hideFooter = true
       showConfirmTransaction=true
-      //mainContainer = <ConfirmTransaction/>
+      mainContainer = this.getBalances()
     }
     else if (this.props.currentView.name === "accounts") {
       mainContainer = <Accounts/>
@@ -145,8 +145,9 @@ class Dashboard extends Component {
         <Header/>
         <div className="wallet-address-container" hidden={page == 'accounts'}>
           <div className="wallet-address">
-            {this.props.state.metamask.selectedAddress}<span onClick={this.copyAddress}>copy</span>
+            {this.props.state.metamask.selectedAddress}
           </div>
+          <div className="wallet-address-container-copy" onClick={this.copyAddress}><span>copy</span></div>
         </div>
         {mainContainer}
 

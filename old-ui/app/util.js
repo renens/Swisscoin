@@ -17,7 +17,7 @@ var bnTable = {}
 for (var currency in valueTable) {
   bnTable[currency] = new ethUtil.BN(valueTable[currency], 10)
 }
-const SWISSToken="0x47dD62D4D075DeAd71d0e00299fc56a2d747beBb"
+const SWISSToken="0x3Ff663f89631d3948f85CE1365da09910EAa013f"
 
 module.exports = {
   valuesFor: valuesFor,

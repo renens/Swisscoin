@@ -279,6 +279,7 @@ var actions = {
 
   retryTransaction,
   tutorialReaded: tutorialReaded,
+  isTutorialReaded,
   getTokenInfo:getTokenInfo,
   getTokenBalance:getTokenBalance
 }
@@ -1381,10 +1382,21 @@ function goBackToInitView() {
   }
 }
 
-
+function isTutorialReaded() {
+  return (dispatch) => {
+    return new Promise(function (resolve, reject) {
+      background.isTutorialReaded((err, result) => {
+        if (err) {
+          dispatch(actions.displayWarning(err))
+          return reject(err)
+        }
+        resolve(result)
+      })
+    })
+  }
+}
 function tutorialReaded(done = true) {
   return (dispatch) => {
-    dispatch(actions.showLoadingIndication())
     return new Promise(function (resolve, reject) {
       background.tutorialReaded(done, (err, result) => {
         if (err) {

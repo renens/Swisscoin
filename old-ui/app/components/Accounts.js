@@ -49,7 +49,9 @@ class Accounts extends Component {
     return (
       <div>
         <div className="app-header">
-          <h3>Accounts</h3>
+          <center>
+            <h3 >Accounts</h3>
+          </center>
           <div className="general-btn" onClick={this.addAccount}>
             <span>Add</span>
             <div className="wave -button"/>

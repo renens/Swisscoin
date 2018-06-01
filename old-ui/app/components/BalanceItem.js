@@ -64,13 +64,19 @@ class BalanceItem extends Component {
       var exRate=this.props.contractExchangeRates[address]
 
       if(exRate) {
-        tokenPrice = exRate.rate;
-        usdBalance = (tokenCount * exRate.rate).toFixed(2)
+        if(exRate.rate) {
+          tokenPrice = exRate.rate;
+          usdBalance = (tokenCount * exRate.rate).toFixed(2)
+        }
+        else{
+          tokenPrice=exRate.usdPrice
+          usdBalance=(tokenCount*exRate.usdPrice).toFixed(2)
+        }
         percent=exRate.change
       }
     }
     else{
-      tokenPrice=this.props.ethConversionRate
+      tokenPrice=this.props.conversionRate
     }
 
     const changeClass = percent ? classnames({
@@ -78,8 +84,11 @@ class BalanceItem extends Component {
       'neg-change': parseFloat(percent) < 0
     }) : undefined;
 
+    var getCurrencySymbol=()=>{
+      return this.props.currencySymbol?this.props.currencySymbol:"$"
+    }
 
-    const priceBlock = <div className="token-amount"><span>${tokenPrice}</span></div>
+    const priceBlock = <div className="token-amount"><span>{getCurrencySymbol} {tokenPrice}</span></div>
     const changeBlock = percent ? <div className={changeClass}>{percent}% </div> : <div></div>
 
     const eqlBgClass = classnames({
@@ -95,6 +104,9 @@ class BalanceItem extends Component {
         </FloatingActionButton>
       }
     }
+
+
+
     return (
       <div onClick={this.showTransfer}>
         <div className="image-container" >
@@ -106,7 +118,7 @@ class BalanceItem extends Component {
           {priceBlock}
         </div>
         <div className="change-container">
-          <div className="currency-value">${usdBalance}</div>
+          <div className="currency-value">{getCurrencySymbol()} {usdBalance}</div>
           <div className="token-amount"><span>{tokenCount} {name}</span></div>
     
         </div>
@@ -120,7 +132,8 @@ function mapStateToProps(state) {
     tokens: state.metamask.tokens,
     state: state,
     contractExchangeRates:state.metamask.contractExchangeRates,
-    ethConversionRate: state.metamask.conversionRate
+    conversionRate: state.metamask.conversionRate,
+    currencySymbol: state.metamask.currencySymbol,
   }
 }
 

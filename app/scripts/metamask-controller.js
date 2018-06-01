@@ -1242,7 +1242,10 @@ module.exports = class MetamaskController extends EventEmitter {
 
   }
   isTutorialReaded() {
-    return this.configManager.getReadedTutorial()
+    const _this = this
+    return new Promise(function (resolve, reject) {
+      resolve(_this.configManager.getReadedTutorial())
+    })
   }
 
   getAllTokens = () => {

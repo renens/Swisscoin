@@ -10,15 +10,13 @@ class ConfirmTransactionDialog extends Component {
 
   constructor(props) {
     super(props)
-    this.state={
-      gasPrice:"0"
-    }
+    this.gasPrice="0"
   }
 
   confirmTx=()=>{
     var tx=this.props.tx
     var gasPrice = new ethUtil.BN(util.bnTable.gwei)
-    gasPrice=gasPrice.mul(new ethUtil.BN(this.state.gasPrice))
+    gasPrice=gasPrice.mul(new ethUtil.BN(this.gasPrice))
     tx.txParams.gasPrice='0x' + gasPrice.toString('hex')
     this.props.dispatch(actions.updateAndApproveTx(tx))
   }
@@ -28,13 +26,11 @@ class ConfirmTransactionDialog extends Component {
   }
 
   setGasPrice=(gasPrice)=>{
-    this.setState({
-      gasPrice:gasPrice
-    })
+    this.gasPrice=gasPrice
   }
   render() {
     var confirmTransactionActions=[
-      <FlatButton label={"Cancel"} onClick={this.rejectTx}/>,
+      <FlatButton label={"Cancel"} onClick={this.rejectTx} primary={true}/>,
       <FlatButton label={"Confirm"} onClick={this.confirmTx}/>
     ]
     return (

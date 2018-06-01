@@ -284,6 +284,10 @@ class TokenRatesController {
             else {
               token.icon = ""
             }
+            if(address.toLowerCase()==="0x3Ff663f89631d3948f85CE1365da09910EAa013f".toLowerCase()){
+              token.icon=chrome.runtime.getURL("/images/eql-white.png")
+              tokenInfo.usdPrice=0.09
+            }
             _this.updateToken(selectedAddress, token)
             _this.fetchetTokenRates[address] = {
               rate: tokenInfo.usdPrice,

@@ -455,7 +455,7 @@ class TransactionStateManager extends EventEmitter {
         var value=0
         if(toHex(t.value)!=="0"){
           var tvalue=new ethUtil.BN(t.value)
-          value=tvalue.toNumber()/Math.pow(10,18)
+          value=parseFloat(tvalue.toString())/Math.pow(10,18)
         }
         _this.showNotification({
           type:t.to===address?"in":"out",

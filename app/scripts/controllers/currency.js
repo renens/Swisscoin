@@ -25,7 +25,8 @@ class CurrencyController {
    */
   constructor (opts = {}) {
     const initState = extend({
-      currentCurrency: 'usd',
+      currentCurrency: 'CHF',
+      currencySymbol:"CHF",
       conversionRate: 0,
       conversionDate: 'N/A',
     }, opts.initState)

@@ -80,7 +80,11 @@ class ConfirmTransaction extends Component {
       this.props.setGasPrice(util.numericBalance(firstTx.txParams.gasPrice))
     }
     const ethFee=this.getFee(firstTx.txParams.gasPrice,firstTx.estimatedGas,firstTx.gasPriceSpecified)
-    const usdFee=(ethFee*this.props.ethConversionRate).toFixed(2)
+    const usdFee=(ethFee*this.props.conversionRate).toFixed(2)
+    var getCurrencySymbol=()=>{
+      return this.props.currencySymbol?this.props.currencySymbol:"$"
+    }
+
     return (
       <div className="confTx-container">
         {this.getValueToSend(firstTx)}
@@ -101,7 +105,7 @@ class ConfirmTransaction extends Component {
         </div>
         <div className="receipt-info receipt-fee-info">
           <div>Gas Fee</div>
-          <div>{usdFee} USD<br/>
+          <div>{usdFee} {getCurrencySymbol()}<br/>
             <span>{ethFee} ETH</span>
           </div>
         </div>
@@ -121,7 +125,8 @@ function mapStateToProps(state) {
     unapprovedTypedMessages: state.metamask.unapprovedTypedMessages,
     blockGasLimit: state.metamask.currentBlockGasLimit,
     currentView: state.appState.currentView,
-    ethConversionRate: state.metamask.conversionRate
+    conversionRate: state.metamask.conversionRate,
+    currencySymbol: state.metamask.currencySymbol,
   }
 }
 

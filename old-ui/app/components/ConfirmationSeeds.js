@@ -17,7 +17,7 @@ class ConfirmationSeeds extends Component {
         <div className="seed-generation-container" >
           <textarea type="text" className="seed-generation" value={this.props.seed} disabled={true} cols={"40"} rows={"3"}/>
           <div className="backup-suggestion">
-            <span>These 12 words are the <strong>ONLY</strong> way to restore your EQUAL wallet, save them someone where safe! <br/></span>
+            <span>These 12 words are the <strong>ONLY</strong> way to restore your SWISS wallet, save them someone where safe! <br/></span>
           </div>
           <div className="general-btn download-seed">
             <span onClick={()=>exportAsFile(`MetaMask Seed Words`, this.props.seed)}>Download Seed Backup <i className="fas fa-arrow-down"/></span>
