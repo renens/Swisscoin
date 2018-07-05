@@ -139,13 +139,14 @@ class Dashboard extends Component {
         <FlatButton label={"Confirm"} onClick={confirm}/>
       ]
     }
-
+    var addressSize=this.props.state.metamask.selectedAddress.length
+    var curAddress=this.props.state.metamask.selectedAddress.slice(0, 12) + "..." + this.props.state.metamask.selectedAddress.slice(addressSize - 12, addressSize)
     return (
       <div className="account-wallet chrome-extension-container">
         <Header/>
-        <div className="wallet-address-container" hidden={page == 'accounts'}>
+        <div className="wallet-address-container" hidden={page === 'accounts' || hideFooter}>
           <div className="wallet-address">
-            {this.props.state.metamask.selectedAddress}
+            {curAddress}
           </div>
           <div className="wallet-address-container-copy" onClick={this.copyAddress}><span>copy</span></div>
         </div>

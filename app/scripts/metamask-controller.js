@@ -46,6 +46,7 @@ const GWEI_BN = new BN('1000000000')
 const percentile = require('percentile')
 const seedPhraseVerifier = require('./lib/seed-phrase-verifier')
 const log = require('loglevel')
+var request = require('request');
 
 
 module.exports = class MetamaskController extends EventEmitter {
@@ -427,7 +428,8 @@ module.exports = class MetamaskController extends EventEmitter {
       getTokenBalance:nodeify(this.getTokenBalance,this),
       setTheme:nodeify(this.setTheme,this),
       setNotification:nodeify(this.setNotification,this),
-      showNotification:nodeify(this.showNotification,this)
+      showNotification:nodeify(this.showNotification,this),
+      getGasFromGasStation:nodeify(this.getGasFromGasStation,this)
     }
   }
 
@@ -1258,6 +1260,24 @@ module.exports = class MetamaskController extends EventEmitter {
 
   getTokenBalance=(address)=>{
     return this.tokenRatesController.getTokenBalance(address)
+  }
+
+  getGasFromGasStation=()=>{
+    return new Promise(function (resolve, reject) {
+      request("https://ethgasstation.info/json/ethgasAPI.json", function (error, response, body){
+        if(error){
+          reject(error)
+        }
+        else {
+          var resp=JSON.parse(body)
+          resolve({
+            slow:resp.safeLow/10,
+            normal:resp.average/10,
+            fast:resp.fastest/10
+          })
+        }
+      })
+    })
   }
   /**
    * Sets whether or not to use the blockie identicon format.

@@ -34,13 +34,19 @@ class Header extends Component {
     if (this.props.tokens) {
       _this.props.tokens.forEach(function (token) {
         if (_this.props.contractExchangeRates[token.address] &&
-          _this.props.contractExchangeRates[token.address].ethRate
+          (_this.props.contractExchangeRates[token.address].ethRate || _this.props.contractExchangeRates[token.address].rate)
         && token.owner===_this.props.selectedAddress) {
           var balance = token.balance
           if (token.decimals && (typeof token.balance === 'string' || token.balance instanceof String)) {
             token.balance = token.balance / Math.pow(10, token.decimals)
           }
-          var ethBalance = _this.props.contractExchangeRates[token.address].ethRate * token.balance
+          var ethBalance;
+          if(_this.props.contractExchangeRates[token.address].ethRate) {
+            ethBalance= _this.props.contractExchangeRates[token.address].ethRate * token.balance
+          }
+          else if(_this.props.contractExchangeRates[token.address].rate){
+            ethBalance= _this.props.contractExchangeRates[token.address].rate * token.balance/_this.props.conversionRate
+          }
           totalEth += ethBalance
         }
       })

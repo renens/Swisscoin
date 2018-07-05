@@ -24,18 +24,19 @@ class Unlock extends Component {
         })
     })
   }
+
   render() {
     return (
       <div className="chrome-extension-container tutorial">
 
         <div className="title">
-          <span className="app-title">SWISS</span>
+          <span className="app-title">SWISSWALLET</span>
           <div className="powered-by">
-            <span>SWISSWALLET</span>
+            <span>By Swisscoin Lab</span>
           </div>
         </div>
         <div className="imagery-container">
-          <img className="float float-0" src="./images/eql-white.png" role="presentation" />
+          <img className="float float-0" style={{top:"1cm",width:"92px"}} src="./images/swisscoin.png" role="presentation" />
           <img className="float floating-logos float-1" src="./images/ethereum-logo.png" role="presentation" />
           <img className="float floating-logos float-2" src="./images/0x-logo.png" role="presentation" />
           <img className="float floating-logos float-3" src="./images/augur-logo.png" role="presentation" />
@@ -54,11 +55,16 @@ class Unlock extends Component {
               type={"password"}
               ref={(t)=>this.password=t}
               errorText={this.state.errorText}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  ev.preventDefault();
+                  this.login();
+                }
+              }}
             />
 
               <div className="general-btn" onClick={this.login}>
                 <span>Log In</span>
-                <div className="wave -button" />
               </div>
 
           </div>

@@ -108,10 +108,18 @@ class CurrencyController {
     let currentCurrency
     try {
       currentCurrency = this.getCurrentCurrency()
-      const response = await fetch(`https://api.infura.io/v1/ticker/eth${currentCurrency.toLowerCase()}`)
-      const parsedResponse = await response.json()
-      this.setConversionRate(Number(parsedResponse.bid))
-      this.setConversionDate(Number(parsedResponse.timestamp))
+      if(currentCurrency.toLowerCase()==="chf"){
+       const response=await fetch('https://api.coinbase.com/v2/prices/ETH-CHF/spot')
+       const parsedResponse = await response.json()
+       this.setConversionRate(Number(parsedResponse.data.amount))
+       this.setConversionDate(Number(new Date()))
+      }
+      else {
+        const response = await fetch(`https://api.infura.io/v1/ticker/eth${currentCurrency.toLowerCase()}`)
+        const parsedResponse = await response.json()
+        this.setConversionRate(Number(parsedResponse.bid))
+        this.setConversionDate(Number(parsedResponse.timestamp))
+      }
     } catch (err) {
       log.warn(`MetaMask - Failed to query currency conversion:`, currentCurrency, err)
       this.setConversionRate(0)

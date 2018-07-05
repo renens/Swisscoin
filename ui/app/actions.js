@@ -729,7 +729,15 @@ function updateGasLimit(gasLimit) {
 function getGasPrice() {
   return (dispatch) => {
     return new Promise((resolve, reject) => {
-      global.ethQuery.gasPrice((err, data) => {
+      background.getGasFromGasStation(function (err,result) {
+        if(err){
+          reject(err)
+        }
+        else{
+          resolve(result)
+        }
+      })
+     /* global.ethQuery.gasPrice((err, data) => {
         if (err) {
           dispatch(actions.displayWarning(err.message))
           return reject(err)
@@ -737,7 +745,7 @@ function getGasPrice() {
         dispatch(actions.hideWarning())
         dispatch(actions.updateGasPrice(data))
         return resolve(data)
-      })
+      })*/
     })
   }
 }

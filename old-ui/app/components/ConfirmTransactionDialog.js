@@ -15,9 +15,11 @@ class ConfirmTransactionDialog extends Component {
 
   confirmTx=()=>{
     var tx=this.props.tx
-    var gasPrice = new ethUtil.BN(util.bnTable.gwei)
-    gasPrice=gasPrice.mul(new ethUtil.BN(this.gasPrice))
-    tx.txParams.gasPrice='0x' + gasPrice.toString('hex')
+    if(!tx.gasPriceSpecified) {
+      var gasPrice = new ethUtil.BN(util.bnTable.gwei)
+      gasPrice = gasPrice.mul(new ethUtil.BN(this.gasPrice))
+      tx.txParams.gasPrice = '0x' + gasPrice.toString('hex')
+    }
     this.props.dispatch(actions.updateAndApproveTx(tx))
   }
 
@@ -39,6 +41,7 @@ class ConfirmTransactionDialog extends Component {
         modal={true}
         actions={confirmTransactionActions}
         open={this.props.open}
+        contentStyle={{width:"95%"}}
       >
         <ConfirmTransaction tx={this.props.tx} setGasPrice={this.setGasPrice}/>
       </Dialog>

@@ -24,7 +24,8 @@ class HistoryItem extends Component {
 
   showTx = () => {
     if(this.props.txInfo.fullHash) {
-      var url = explorerLink(this.props.txInfo.fullHash, 1)
+      var url = "https://ethplorer.io/tx/"+this.props.txInfo.fullHash;
+        //explorerLink(this.props.txInfo.fullHash, 1)
       global.platform.openWindow({url})
     }
   }

@@ -17,6 +17,14 @@ class History extends Component {
     return parseFloat(balance[0] + "." + balance[1].slice(0, 6))
   }
 
+  formatNumber =(num,digits)=> {
+    if(num) {
+      return new Intl.NumberFormat({minimumFractionDigits:digits}).format(num);// num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1'")
+    }
+    else{
+      return ""
+    }
+  }
   getInfo = (tx) => {
     const txParam = tx.txParams
     const date = new Date(tx.rawTx?tx.time:tx.time * 1000);
@@ -62,10 +70,10 @@ class History extends Component {
 
     return {
       type: type,
-      value: value,
+      value: this.formatNumber(value,8),
       hash: transactionId,
       date: date,
-      usdValue: usdValue,
+      usdValue: this.formatNumber(usdValue,2),
       symbol: symbol,
       fullHash:tx.hash
     }
@@ -74,7 +82,7 @@ class History extends Component {
   render() {
     return (
       <div className="token-list">
-        <ul data-simplebar>
+        <ul data-simplebar >
           {this.props.transactions.map((row, index) => (
               <li>
                 <HistoryItem txInfo={this.getInfo(row)}/>

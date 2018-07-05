@@ -50,6 +50,15 @@ class BalanceItem extends Component {
       global.platform.openWindow({url})
     }
   }
+  formatNumber =(num,digits)=> {
+    if(num) {
+      return new Intl.NumberFormat({minimumFractionDigits:digits}).format(num);// num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1'")
+    }
+    else{
+      return ""
+    }
+  }
+
   render() {
     const _this=this
 
@@ -70,7 +79,7 @@ class BalanceItem extends Component {
         }
         else{
           tokenPrice=exRate.usdPrice
-          usdBalance=(tokenCount*exRate.usdPrice).toFixed(2)
+          usdBalance=exRate.usdPrice?(tokenCount*exRate.usdPrice).toFixed(2):"-"
         }
         percent=exRate.change
       }
@@ -107,6 +116,7 @@ class BalanceItem extends Component {
 
 
 
+
     return (
       <div onClick={this.showTransfer}>
         <div className="image-container" >
@@ -118,8 +128,8 @@ class BalanceItem extends Component {
           {priceBlock}
         </div>
         <div className="change-container">
-          <div className="currency-value">{getCurrencySymbol()} {usdBalance}</div>
-          <div className="token-amount"><span>{tokenCount} {name}</span></div>
+          <div className="currency-value">{getCurrencySymbol()} {this.formatNumber(usdBalance,2)}</div>
+          <div className="token-amount"><span>{this.formatNumber(tokenCount,8)} {name}</span></div>
     
         </div>
       </div>

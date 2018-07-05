@@ -42,16 +42,17 @@ class Balance extends Component {
 
 
     this.props.state.metamask.tokens.forEach(function (val) {
-
-      if (val.decimals && (typeof val.balance === 'string' || val.balance instanceof String)) {
-        val.balance = val.balance / Math.pow(10, val.decimals)
-      }
-      if(val.owner===_this.props.state.metamask.selectedAddress) {
-        if (val.address.toLowerCase() === util.SWISSToken.toLowerCase()) {
-          tokens.unshift(val)
+      if(val.name) {
+        if (val.decimals && (typeof val.balance === 'string' || val.balance instanceof String)) {
+          val.balance = val.balance / Math.pow(10, val.decimals)
         }
-        else {
-          tokens.push(val)
+        if (val.owner === _this.props.state.metamask.selectedAddress) {
+          if (val.address.toLowerCase() === util.SWISSToken.toLowerCase()) {
+            tokens.unshift(val)
+          }
+          else {
+            tokens.push(val)
+          }
         }
       }
     })

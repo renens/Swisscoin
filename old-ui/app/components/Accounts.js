@@ -54,7 +54,6 @@ class Accounts extends Component {
           </center>
           <div className="general-btn" onClick={this.addAccount}>
             <span>Add</span>
-            <div className="wave -button"/>
           </div>
         </div>
         <List className="accounts-list" data-simplebar>

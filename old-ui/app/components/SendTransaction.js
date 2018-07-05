@@ -3,12 +3,10 @@ import classnames from 'classnames';
 import TextField from 'material-ui/TextField';
 import {connect} from "react-redux";
 import * as actions from "../../../ui/app/actions";
-import {Dialog, Divider, FlatButton, Slider} from "material-ui";
+import {Dialog, Divider, FlatButton, RaisedButton, Slider} from "material-ui";
 import {orange500, blue500} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import Toggle from 'material-ui/Toggle';
-
 const abi = require('human-standard-token-abi')
 const ethUtil = require('ethereumjs-util')
 const util = require('../util')
@@ -56,6 +54,15 @@ const styles = {
   trackOff: {
     backgroundColor: '#c6c9ef',
   },
+  max: {
+  position: 'absolute',
+    right: '25px',
+    marginTop: '35px',
+    lineHeight: '28px',
+    height: '28px',
+    minWidth: '60px',
+    fontSize: '11px',
+},
 };
 
 
@@ -67,26 +74,23 @@ class SendTransaction extends Component {
     var _this = this
 
     this.state = {
-      sliderValue: 10,
       amountError: "",
       addressError: "",
       amount: undefined,
-      eqlFee: 0,
+      gasPrices: {},
       gasPrice: 0,
       secondSlider: 50,
       swiftSend: true,
       estimateGas: 21000
     };
-    this.isEQL = this.props.currentView.value.isToken &&
-      this.props.currentView.value.address.toLowerCase() === util.SWISSToken.toLowerCase()
+
     this.symbol = this.props.tokens[this.props.currentView.value.address] ?
       this.props.tokens[this.props.currentView.value.address].symbol : "ETH"
 
     this.props.dispatch(actions.getGasPrice()).then(function (result) {
-      var gasPrice = util.numericBalance(result)
-      gasPrice = gasPrice.div(util.bnTable.gwei)
       _this.setState({
-        gasPrice: gasPrice.toNumber()
+        gasPrices: result,
+        gasPrice: result.normal
       })
     })
   }
@@ -94,7 +98,7 @@ class SendTransaction extends Component {
   showConfirm = () => {
     if (this.state.amountError === "" && this.amount.getValue() !== "" &&
       this.state.addressError === "" && this.recipient.getValue() !== "") {
-      var gasPrice = new ethUtil.BN(this.state.gasPrice).toString("hex")
+      var gasPrice = new ethUtil.BN(this.state.gasPrice).mul(util.bnTable.gwei).toString("hex")
       if (this.props.currentView.value.isToken) {
         console.log("Do transfer token")
         const value = this.amount.getValue() * Math.pow(10, this.props.currentView.value.decimals)
@@ -126,14 +130,10 @@ class SendTransaction extends Component {
     }
   }
 
-  handleToggle = (e, val) => {
-    console.log(val)
-    this.setState({swiftSend: val});
-  }
-
   cancel = () => {
     this.props.dispatch(actions.goHome())
   }
+
   checkAddress = (e, val) => {
     if (!ethUtil.isValidAddress(val)) {
       this.setState({
@@ -161,31 +161,14 @@ class SendTransaction extends Component {
       })
     }
     else {
-      var burnFee = this.isEQL ? util.calcFee(val, false) : 0
-      //TODO calc network fee for contract transfer call
       this.setState({
         amountError: "",
-        eqlFee: burnFee
       })
     }
   }
   setMaxAmount = () => {
-    if (this.isEQL) {
-      var maxValue = util.transferMax(this.props.currentView.value.balance, false)
-      this.setState({
-        amount: maxValue,
-        eqlFee: util.calcFee(maxValue, false)
-      })
-    }
-    else {
-      this.setState({
-        amount: this.props.currentView.value.balance
-      })
-    }
-  }
-  handleFirstSlider = (e, value) => {
     this.setState({
-      gasPrice: value
+      amount: this.props.currentView.value.balance
     })
   }
 
@@ -196,17 +179,16 @@ class SendTransaction extends Component {
     }
     var _this = this
     var getFee = () => {
-      var gasPrice = new ethUtil.BN(this.state.gasPrice.toString())
+      var gasPrice = new ethUtil.BN(this.state.gasPrice + "")
       var estGas = new ethUtil.BN(this.state.estimateGas.toString())
       const estGasEth = gasPrice.mul(estGas).toNumber() / Math.pow(10, 9);
       return (estGasEth * _this.props.conversionRate).toFixed(2)
     }
 
-    var getCurrencySymbol=()=>{
-      return this.props.currencySymbol?this.props.currencySymbol:"$"
+    var getCurrencySymbol = () => {
+      return this.props.currencySymbol ? this.props.currencySymbol : "$"
     }
 
-    //<FlatButton className="max-btn" label={"max"} onClick={this.setMaxAmount}/>
     return (
 
       <div className="send-container">
@@ -226,6 +208,7 @@ class SendTransaction extends Component {
           inputStyle={{fontSize: '14px;', color: '#5f5865;'}}
         />
         <div className="amount-input-btn-block">
+
           <TextField
             id="transferAmount"
             className="pay_text"
@@ -243,25 +226,27 @@ class SendTransaction extends Component {
             inputStyle={{fontSize: '14px;', color: '#5f5865;'}}
 
           />
+          <FlatButton className="max-btn" style={styles.max} label={"max"} onClick={this.setMaxAmount}/>
 
         </div>
         <div className="send-btn-container">
-            <div className="tx-speed-container">
-              <MuiThemeProvider muiTheme={muiTheme}>
-                <Slider step={1} className="gas-slider" value={this.state.gasPrice} onChange={this.handleFirstSlider}
-                        min={1} max={100} style={{width: "95%"}}/>
-              </MuiThemeProvider>
-              <div className="transaction-info">
-                <div>Slow</div>
-                <div>{this.state.gasPrice} Gwei</div>
-                <div>Fast</div>
-              </div>
+          <div>
+            <RaisedButton label="slow" onClick={() => {
+              this.setState({gasPrice: this.state.gasPrices.slow})
+            }}/>
+            <RaisedButton primary={true} label="normal" onClick={() => {
+              this.setState({gasPrice: this.state.gasPrices.normal})
+            }}/>
+            <RaisedButton secondary={true} label="fast" onClick={() => {
+              this.setState({gasPrice: this.state.gasPrices.fast})
+            }}/>
+          </div>
+          <div className="tx-speed-container">
+            <div className="transaction-info">
+              Gas price {this.state.gasPrice} Gwei
             </div>
+          </div>
           <div className="fee-summary">
-            <div hidden={!this.isEQL}>
-              <span className="max-fee">Burn Fee</span>
-              <span className="fee-eth">{this.state.eqlFee}</span>EQL
-            </div>
             <span className="max-fee">Min Network Fee</span>
             <span className="usd-fee">{getFee()}</span> {getCurrencySymbol()}
           </div>
