@@ -1273,7 +1273,7 @@ module.exports = class MetamaskController extends EventEmitter {
           resolve({
             slow:resp.safeLow/10,
             normal:resp.average/10,
-            fast:resp.fastest/10
+            fast:resp.fast/10
           })
         }
       })

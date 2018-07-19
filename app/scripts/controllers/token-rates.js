@@ -208,6 +208,7 @@ class TokenRatesController {
   usdPrice = /\$(\d*.\d*\s)/
   ethPrice = /@\s(\d*.\d*\s)Eth/
   changePattern = /\((.*)%/
+  changePosPattern = /(.*)%/
 
   getTokenInfo = (address) => {
     const _this = this
@@ -237,6 +238,16 @@ class TokenRatesController {
         }*/
 
         request(BASEURL + "token/" + address, function (error, response, body) {
+          function doResolve() {
+            _this.updateToken(selectedAddress, token)
+            _this.fetchetTokenRates[address] = {
+              rate: tokenInfo.usdPrice,
+              ethRate: tokenInfo.ethPrice,
+              change: tokenInfo.change
+            }
+            resolve(_this.fetchetTokenRates[address])
+          }
+
           if (error) {
             reject(error)
           }
@@ -272,6 +283,13 @@ class TokenRatesController {
                         if (change && change.length > 1) {
                           tokenInfo.change = parseFloat(change[1])
                         }
+
+                        else if (val1.children[2]) {
+                          change = val1.children[2].data.match(_this.changePosPattern)
+                          if (change && change.length > 1) {
+                            tokenInfo.change = parseFloat(change[1])
+                          }
+                        }
                       }
                     }
                   })
@@ -286,15 +304,21 @@ class TokenRatesController {
             }
             if(address.toLowerCase()==="0x3Ff663f89631d3948f85CE1365da09910EAa013f".toLowerCase()){
               token.icon=chrome.runtime.getURL("/images/swisscoin.png")
-              tokenInfo.usdPrice=0.12
+              request("https://blooming-headland-28407.herokuapp.com/swissprice",function (error, response, body) {
+                if (error) {
+                  reject(error)
+                }
+                else {
+                  var usdPrice=JSON.parse(body).usd
+                  tokenInfo.usdPrice=usdPrice
+                  doResolve();
+                }
+              })
+
             }
-            _this.updateToken(selectedAddress, token)
-            _this.fetchetTokenRates[address] = {
-              rate: tokenInfo.usdPrice,
-              ethRate: tokenInfo.ethPrice,
-              change: tokenInfo.change
+            else {
+              doResolve();
             }
-            resolve(_this.fetchetTokenRates[address])
           }
         })
       }

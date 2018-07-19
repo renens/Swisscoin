@@ -617,12 +617,13 @@ i.fas.fa-ellipsis-v {
 
 .neg-change {
   color:rgb(232, 32, 112)!important;
+  background-color: #ff002a2b!important;
 }
 .change {
-  font-size: 13px;
+  font-size: 10px;
   border-radius: 17px;
   color: #30d843;
-  display: block;
+  backgroundColor: rgba(37, 220, 144, 0.13)
 }
 .fas.fa-arrow-up {
   margin-right: 5px;
@@ -1759,4 +1760,16 @@ i.fas.fa-ellipsis-v {
 
 .login-input-btn-container{
   width: 300px;
+}
+
+.buttonSendSlow {
+  background: yellow;
+}
+
+.buttonSendNormal {
+  background: yellowgreen;
+}
+
+.buttonSendFast {
+  background: orange;
 }

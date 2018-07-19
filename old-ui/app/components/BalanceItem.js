@@ -97,8 +97,10 @@ class BalanceItem extends Component {
       return this.props.currencySymbol?this.props.currencySymbol:"$"
     }
 
-    const priceBlock = <div className="token-amount"><span>{getCurrencySymbol} {tokenPrice}</span></div>
-    const changeBlock = percent ? <div className={changeClass}>{percent}% </div> : <div></div>
+    const changeBlock = percent ? <span className={changeClass}>{percent}% </span> : <span></span>
+
+    const priceBlock = <div className="token-amount"><span>{getCurrencySymbol} {tokenPrice}</span> </div>
+
 
     const eqlBgClass = classnames({
       'eql-logo': tokenType === 'eql',
@@ -128,7 +130,8 @@ class BalanceItem extends Component {
           {priceBlock}
         </div>
         <div className="change-container">
-          <div className="currency-value">{getCurrencySymbol()} {this.formatNumber(usdBalance,2)}</div>
+          {changeBlock}
+          <span className="currency-value">{getCurrencySymbol()} {this.formatNumber(usdBalance,2)}</span>
           <div className="token-amount"><span>{this.formatNumber(tokenCount,8)} {name}</span></div>
     
         </div>

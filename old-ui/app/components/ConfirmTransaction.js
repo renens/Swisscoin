@@ -11,6 +11,23 @@ import {Divider, RaisedButton} from "material-ui";
 const util = require('../util')
 const ethUtil = require('ethereumjs-util')
 
+const styles={
+  slowButton:{
+    backgroundColor:"#ffff9d",
+    height: "30px",
+    lineHeight:"30px"
+  },
+  normalButton:{
+    backgroundColor:"#FFFF00",
+    height: "30px",
+    lineHeight:"30px"
+  },
+  fastButton:{
+    backgroundColor:"#fbb03f",
+    height: "30px",
+    lineHeight:"30px"
+  }
+}
 class ConfirmTransaction extends Component {
 
   static propTypes = {};
@@ -50,7 +67,8 @@ class ConfirmTransaction extends Component {
     else if (tx.txParams && tx.txParams.value !== "0x0") {
       var value = util.numericBalance(tx.txParams.value).toString()
       value = parseFloat(value) / Math.pow(10, 18)
-      return <h4 className="confTx-amount">{value}<span>ETH</span></h4>
+      value=new Intl.NumberFormat("en-EU",{minimumFractionDigits:8}).format(value);// num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1'")
+      return <h4 className="confTx-amount">{value}<span style={{margin:"5px"}}>ETH</span></h4>
     }
   }
 
@@ -92,13 +110,13 @@ class ConfirmTransaction extends Component {
         </div>
         <div hidden={firstTx.gasPriceSpecified}>
           <div className="send-btn-container">
-            <RaisedButton label="slow" onClick={() => {
+            <RaisedButton  buttonStyle={styles.slowButton} label="slow" onClick={() => {
               this.setState({gasPrice: this.state.gasPrices.slow})
             }}/>
-            <RaisedButton primary={true} label="normal" onClick={() => {
+            <RaisedButton buttonStyle={styles.normalButton} label="normal" onClick={() => {
               this.setState({gasPrice: this.state.gasPrices.normal})
             }}/>
-            <RaisedButton secondary={true} label="fast" onClick={() => {
+            <RaisedButton buttonStyle={styles.fastButton} label="fast" onClick={() => {
               this.setState({gasPrice: this.state.gasPrices.fast})
             }}/>
           </div>

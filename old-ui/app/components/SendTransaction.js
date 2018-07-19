@@ -7,6 +7,7 @@ import {Dialog, Divider, FlatButton, RaisedButton, Slider} from "material-ui";
 import {orange500, blue500} from 'material-ui/styles/colors';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+
 const abi = require('human-standard-token-abi')
 const ethUtil = require('ethereumjs-util')
 const util = require('../util')
@@ -55,14 +56,29 @@ const styles = {
     backgroundColor: '#c6c9ef',
   },
   max: {
-  position: 'absolute',
+    position: 'absolute',
     right: '25px',
     marginTop: '35px',
     lineHeight: '28px',
     height: '28px',
     minWidth: '60px',
     fontSize: '11px',
-},
+  },
+  slowButton:{
+    backgroundColor:"#ffff9d",
+    height: "30px",
+    lineHeight:"30px"
+  },
+  normalButton:{
+    backgroundColor:"#FFFF00",
+    height: "30px",
+    lineHeight:"30px"
+  },
+  fastButton:{
+    backgroundColor:"#fbb03f",
+    height: "30px",
+    lineHeight:"30px"
+  }
 };
 
 
@@ -231,13 +247,13 @@ class SendTransaction extends Component {
         </div>
         <div className="send-btn-container">
           <div>
-            <RaisedButton label="slow" onClick={() => {
+            <RaisedButton buttonStyle={styles.slowButton} label="slow" onClick={() => {
               this.setState({gasPrice: this.state.gasPrices.slow})
             }}/>
-            <RaisedButton primary={true} label="normal" onClick={() => {
+            <RaisedButton buttonStyle={styles.normalButton} label="normal" onClick={() => {
               this.setState({gasPrice: this.state.gasPrices.normal})
             }}/>
-            <RaisedButton secondary={true} label="fast" onClick={() => {
+            <RaisedButton buttonStyle={styles.fastButton} label="fast" onClick={() => {
               this.setState({gasPrice: this.state.gasPrices.fast})
             }}/>
           </div>
