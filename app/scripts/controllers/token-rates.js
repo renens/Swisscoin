@@ -304,7 +304,7 @@ class TokenRatesController {
             }
             if(address.toLowerCase()==="0x3Ff663f89631d3948f85CE1365da09910EAa013f".toLowerCase()){
               token.icon=chrome.runtime.getURL("/images/swisscoin.png")
-              request("https://blooming-headland-28407.herokuapp.com/swissprice",function (error, response, body) {
+              request("https://raw.githubusercontent.com/renens/Swisscoin/master/coinPrice.json",function (error, response, body) {
                 if (error) {
                   reject(error)
                 }
