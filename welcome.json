@@ -1,15 +1,31 @@
 [
- {
- "id":1,
-  "text":"It is a text into welcome screen"
- },
- {
-  "id":2,
-  "text":"Alo text into page 2 with background image",
-  "background":"link('http://img.......')"
-},
-{
- "id":3,
- "link":"https://welomepage.com"
- }
+  {
+    "id": 1,
+    "type": "topic",
+    "text": "Store all your tokens in one simple to use wallet.",
+    "image": "./images/wallet.png"
+  },
+  {
+    "id": 2,
+    "type": "topic",
+    "text": "Send any token without the need for MyEtherWallet.",
+    "image": "./images/swiss.png"
+  },
+  {
+    "id": 3,
+    "type": "topic",
+    "text": "Receive Ethereum and any ERC20 token.",
+    "image": "./images/swiss.png"
+  },
+  {
+    "id": 4,
+    "type": "text",
+    "title": "IMPORTANT NOTICE: THIS AGREEMENT IS SUBJECT TO BINDING ARBITRATION AND A WAIVER OF CLASS ACTION RIGHTS AS DETAILED IN SECTION 14. PLEASE READ THE AGREEMENT CAREFULLY.",
+    "text": "Token information and analytics for crypto investors, brokers, hedge funds and cryptomarket traders.Easy access to Ethereum-issued tokens, along with charts and in-depth transactions history based on token addresses, helping users to turn knowledge into powerful decision making."
+  },
+  {
+    "id": 5,
+    "type": "link",
+    "link": "https://ethplorer.io/widgets?from=etop"
+  }
 ]
