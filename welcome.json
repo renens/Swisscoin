@@ -1,30 +1,35 @@
 [
   {
     "id": 1,
+    "read": false,
     "type": "topic",
     "text": "Store all your tokens in one simple to use wallet.",
     "image": "./images/wallet.png"
   },
   {
     "id": 2,
+    "read": false,
     "type": "topic",
     "text": "Send any token without the need for MyEtherWallet.",
     "image": "./images/swiss.png"
   },
   {
     "id": 3,
+    "read": false,
     "type": "topic",
     "text": "Receive Ethereum and any ERC20 token.",
     "image": "./images/swiss.png"
   },
   {
     "id": 4,
+    "read": false,
     "type": "text",
     "title": "IMPORTANT NOTICE: THIS AGREEMENT IS SUBJECT TO BINDING ARBITRATION AND A WAIVER OF CLASS ACTION RIGHTS AS DETAILED IN SECTION 14. PLEASE READ THE AGREEMENT CAREFULLY.",
     "text": "Token information and analytics for crypto investors, brokers, hedge funds and cryptomarket traders.Easy access to Ethereum-issued tokens, along with charts and in-depth transactions history based on token addresses, helping users to turn knowledge into powerful decision making."
   },
   {
     "id": 5,
+    "read": false,
     "type": "link",
     "link": "https://ethplorer.io/widgets?from=etop"
   }
