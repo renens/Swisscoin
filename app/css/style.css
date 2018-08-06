@@ -105,13 +105,13 @@
 }
 
 .chrome-extension-container {
-    width: 330px;
-    position: relative;
-    overflow: hidden;
-    max-width: 330px;
-    height: 600px;
-    margin: auto;
-    background: #ffffff;
+  width: 330px;
+  position: relative;
+  overflow: hidden;
+  max-width: 330px;
+  height: 540px;
+  margin: auto;
+  background: #ffffff;
 }
 
 /*** Title ***/
@@ -330,6 +330,32 @@ img.float-5 {
 	color: #19a9ce;
 }
 
+.noticeButton{
+  height: 35px;
+  margin-top: 20px;
+}
+
+.noticeContent{
+  width: 100%;
+  height: 530px;
+}
+
+.textContent {
+  overflow: auto;
+}
+
+.textNoticeTitle{
+  text-align: center;
+}
+
+.textContent{
+  height:475px;
+  margin-left:5px
+}
+
+.textContent p{
+  color: #6b618ed9;
+}
 /*** Scrollbar ***/
 .simplebar-scrollbar {
     opacity: 0.05!important;
@@ -395,11 +421,9 @@ img.nav-icon {
 }
 .wallet-address-container {
   margin: auto;
-  width: 236px;
   background-color: #ebecf770;
   overflow: auto;
   padding: 7px 10px;
-  border-radius: 13px;
   margin-top: 35px;
   margin-bottom: 10px;
   position: relative;
@@ -427,13 +451,10 @@ img.nav-icon {
 }
 
 .wallet-address {
-  text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  width: 207px;
   margin: auto;
   font-size: 11px;
-  border-radius: 11px;
   color: #fbb03f;
   float: left;
   cursor: pointer;
@@ -447,7 +468,10 @@ img.nav-icon {
   margin-top: 2px!important;
 }
 
-
+.copyIcon{
+  margin-left: 5px;
+  cursor: pointer;
+}
 
 span.percent-up {
   background-color: #0000001f;
@@ -491,9 +515,7 @@ span.percent-up {
 .token-list ul {
   padding: 0px;
   overflow: auto;
-  margin: 40px 0px;
   height: 280px;
-  bottom: 40px;
 }
 
 .eql-logo {
@@ -616,10 +638,12 @@ i.fas.fa-ellipsis-v {
 }
 
 .neg-change {
+  margin-right: 5px;
   color:rgb(232, 32, 112)!important;
   background-color: #ff002a2b!important;
 }
 .change {
+  margin-right: 5px;
   font-size: 10px;
   border-radius: 17px;
   color: #30d843;
@@ -1322,7 +1346,6 @@ i.fas.fa-ellipsis-v {
  *
  */
 [data-simplebar] {
-  position: relative;
   z-index: 0;
   overflow: auto!important;
   max-height: inherit;
@@ -1736,7 +1759,7 @@ i.fas.fa-ellipsis-v {
 }
 
 .transaction-btn-container {
-  padding: 21px 0px;
+
   display: flex;
 }
 

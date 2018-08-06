@@ -36,7 +36,7 @@ class TxGasUtil {
       )
       if (simulationFailed) {
         txMeta.simulationFails = true
-        return txMeta
+        estimatedGasHex="0x5208"
       }
     }
     this.setTxGas(txMeta, block.gasLimit, estimatedGasHex)

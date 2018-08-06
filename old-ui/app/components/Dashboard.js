@@ -15,6 +15,7 @@ import * as actions from "../../../ui/app/actions";
 import ConfirmationSeeds from "./ConfirmationSeeds";
 import ConfirmTransactionDialog from "./ConfirmTransactionDialog";
 import Settings from "./Settings";
+
 const txHelper = require('../../lib/tx-helper')
 
 const tabStyle = {
@@ -86,34 +87,36 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { network,  unapprovedTxs,
-      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages,  blockGasLimit } = this.props
+    const {
+      network, unapprovedTxs,
+      unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, blockGasLimit
+    } = this.props
 
     var unconfTxList = txHelper(unapprovedTxs, unapprovedMsgs, unapprovedPersonalMsgs, unapprovedTypedMessages, network)
 
-    var firstTx=unconfTxList.pop()
+    var firstTx = unconfTxList.pop()
 
     var mainContainer;
     var hideFooter = false
     var uncomfirmetnCount = 0
     var _this = this
     var page = "home"
-    var showConfirmTransaction=false
+    var showConfirmTransaction = false
     if (this.props.currentView.name === "sendTransaction") {
       mainContainer = <SendTransaction/>
       hideFooter = true
     }
     else if (/*this.props.currentView.name === "confTx" &&*/ firstTx) {
       hideFooter = true
-      showConfirmTransaction=true
+      showConfirmTransaction = true
       mainContainer = this.getBalances()
     }
     else if (this.props.currentView.name === "accounts") {
       mainContainer = <Accounts/>
       page = "accounts"
     }
-    else if(this.props.currentView.name==="config"){
-      mainContainer=<Settings/>
+    else if (this.props.currentView.name === "config") {
+      mainContainer = <Settings/>
       page = "settings"
     }
     else {
@@ -123,8 +126,10 @@ class Dashboard extends Component {
     var showConfirm = false
 
     var seed
+    var hideDetail = false
     if (this.props.seed || this.props.cachedSeed) {
       showConfirm = true
+      hideDetail = true
       if (this.props.seed) {
         seed = this.props.seed
       }
@@ -136,19 +141,24 @@ class Dashboard extends Component {
         showConfirm = false
       }
       dialogActions = [
-        <FlatButton label={"Confirm"} onClick={confirm}/>
+        <div className="general-btn" style={{height: "16px"}} onClick={confirm}>
+          <span>Confirm</span>
+        </div>
       ]
     }
-    var addressSize=this.props.state.metamask.selectedAddress.length
-    var curAddress=this.props.state.metamask.selectedAddress.slice(0, 12) + "..." + this.props.state.metamask.selectedAddress.slice(addressSize - 12, addressSize)
+    var addressSize = this.props.state.metamask.selectedAddress.length
+    var curAddress = this.props.state.metamask.selectedAddress
     return (
       <div className="account-wallet chrome-extension-container">
-        <Header/>
+        <Header hideDetail={hideDetail}/>
         <div className="wallet-address-container" hidden={page === 'accounts' || hideFooter}>
           <div className="wallet-address">
             {curAddress}
           </div>
-          <div className="wallet-address-container-copy" onClick={this.copyAddress}><span>copy</span></div>
+          <span className="copyIcon" onClick={this.copyAddress}>
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACfSURBVDhPY8AGKrrn/MeF6/oXXoQqww1ACj/9+o+BQeI9c1b/q5mw4DxUKXaAz4Av377/75m96h/QJafginHhKYs3YhgAAl++fv/fDTSkpn/+UbAB2ABIvGfumv9TlmxCMQAd4zUA7Nw5q/5PX7YFxSXIBuI1AATAzgUaMmPFVtINQMckGYAORg2AKMaGSTIAnHTRAVUMIBZDtSABBgYAnWj0B+1+CHAAAAAASUVORK5CYII="/>
+          </span>
+
         </div>
         {mainContainer}
 

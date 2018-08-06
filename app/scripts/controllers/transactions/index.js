@@ -63,6 +63,7 @@ class TransactionController extends EventEmitter {
     this.blockTracker = opts.blockTracker
     this.signEthTx = opts.signTransaction
     this.getGasPrice = opts.getGasPrice
+    this.externalDataController=opts.externalDataController
 
     this.memStore = new ObservableStore({})
     this.query = new EthQuery(this.provider)
@@ -73,7 +74,8 @@ class TransactionController extends EventEmitter {
       initState: opts.initState,
       txHistoryLimit: opts.txHistoryLimit,
       getNetwork: this.getNetwork.bind(this),
-      getTokens:opts.getTokens
+      getTokens:opts.getTokens,
+      isInited:opts.isInited
     })
     this._onBootCleanUp()
 
@@ -100,19 +102,27 @@ class TransactionController extends EventEmitter {
     this._updateMemstore()
     this.txStateManager.store.subscribe(() => this._updateMemstore())
     this.networkStore.subscribe(() => this._updateMemstore())
-    this.preferencesStore.subscribe((state) => {
+    /*this.preferencesStore.subscribe((state) => {
       if(state.selectedAddress && !this.transactionHistoryLoaders[state.selectedAddress]){
         var historyLoader=new TransactionHistoryLoader({
           address:state.selectedAddress,
           txStateManager:this.txStateManager
         })
         this.transactionHistoryLoaders[state.selectedAddress]=historyLoader
-        historyLoader.start()
+        //historyLoader.start()
       }
+      //this.txStateManager.wipeTransactions(state.selectedAddress)
       if(state.tokenTransfer && state.tokenTransfer.length>0){
         this.txStateManager.loadingTokenTransferInfo(state.tokenTransfer,state.selectedAddress)
       }
-      this._updateMemstore()})
+      this._updateMemstore()})*/
+    var _this=this
+    this.externalDataController.on('newTokenTransaction',function (address,newTokenTransaction,showNotify) {
+      _this.txStateManager.addTokenTransferInfo(address,newTokenTransaction,showNotify)
+    })
+    this.externalDataController.on('transactionFromHistory',function (address,tx,showNotify) {
+      _this.txStateManager.addTransaction(address,tx,showNotify)
+    })
   }
   /** @returns {number} the chainId*/
   getChainId () {
@@ -240,6 +250,14 @@ class TransactionController extends EventEmitter {
     return txMeta
   }
 
+  updateTokenTransaction (hash,tokenInfo){
+    var _this=this
+    return new Promise(function (resolve, reject) {
+      _this.txStateManager.updateTokenTransaction(hash,tokenInfo)
+      resolve();
+    })
+
+  }
   /**
   updates the txMeta in the txStateManager
   @param txMeta {Object} - the updated txMeta
@@ -355,14 +373,15 @@ class TransactionController extends EventEmitter {
   updateTxs(block,cb){
     if(block && block.transactions){
       const selectedAddress=this.getSelectedAddress()
+
       var _this=this
       block.transactions.forEach(function (tx) {
         if(tx.from===selectedAddress || tx.to===selectedAddress){
-          this.txStateManager.updateTransactionFromHistory([tx],selectedAddress)
-          cb(true)
+          _this.txStateManager.updateTransactionFromHistory([tx],selectedAddress,true)
         }
       })
     }
+    cb()
   }
 //
 //           PRIVATE METHODS
@@ -375,6 +394,9 @@ class TransactionController extends EventEmitter {
     this.getNetwork = () => this.networkStore.getState()
     /** @returns the user selected address */
     this.getSelectedAddress = () => this.preferencesStore.getState().selectedAddress
+
+    this.getTokens = () => this.preferencesStore.getState().tokens
+
     /** Returns an array of transactions whos status is unapproved */
     this.getUnapprovedTxCount = () => Object.keys(this.txStateManager.getUnapprovedTxList()).length
     /**
@@ -425,7 +447,7 @@ class TransactionController extends EventEmitter {
     })
     this.pendingTxTracker.on('tx:confirmed', (txId) => this.txStateManager.setTxStatusConfirmed(txId))
     this.pendingTxTracker.on('tx:confirmed', (txId) => this._markNonceDuplicatesDropped(txId))
-    this.pendingTxTracker.on('tx:confirmed', () => this.emit('updateTokenTx'))
+    //this.pendingTxTracker.on('tx:confirmed', () => this.emit('updateTokenTx'))
 
     this.pendingTxTracker.on('tx:failed', this.txStateManager.setTxStatusFailed.bind(this.txStateManager))
     this.pendingTxTracker.on('tx:block-update', (txMeta, latestBlockNumber) => {
@@ -457,16 +479,18 @@ class TransactionController extends EventEmitter {
   _markNonceDuplicatesDropped (txId) {
     // get the confirmed transactions nonce and from address
     const txMeta = this.txStateManager.getTx(txId)
-    const { nonce, from } = txMeta.txParams
-    const sameNonceTxs = this.txStateManager.getFilteredTxList({nonce, from})
-    if (!sameNonceTxs.length) return
-    // mark all same nonce transactions as dropped and give i a replacedBy hash
-    sameNonceTxs.forEach((otherTxMeta) => {
-      if (otherTxMeta.id === txId) return
-      otherTxMeta.replacedBy = txMeta.hash
-      this.txStateManager.updateTx(txMeta, 'transactions/pending-tx-tracker#event: tx:confirmed reference to confirmed txHash with same nonce')
-      this.txStateManager.setTxStatusDropped(otherTxMeta.id)
-    })
+    if(txMeta) {
+      const {nonce, from} = txMeta.txParams
+      const sameNonceTxs = this.txStateManager.getFilteredTxList({nonce, from})
+      if (!sameNonceTxs.length) return
+      // mark all same nonce transactions as dropped and give i a replacedBy hash
+      sameNonceTxs.forEach((otherTxMeta) => {
+        if (otherTxMeta.id === txId) return
+        otherTxMeta.replacedBy = txMeta.hash
+        this.txStateManager.updateTx(txMeta, 'transactions/pending-tx-tracker#event: tx:confirmed reference to confirmed txHash with same nonce')
+        this.txStateManager.setTxStatusDropped(otherTxMeta.id)
+      })
+    }
   }
 
   /**

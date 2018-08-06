@@ -195,9 +195,9 @@ class SendTransaction extends Component {
     }
     var _this = this
     var getFee = () => {
-      var gasPrice = new ethUtil.BN(this.state.gasPrice + "")
-      var estGas = new ethUtil.BN(this.state.estimateGas.toString())
-      const estGasEth = gasPrice.mul(estGas).toNumber() / Math.pow(10, 9);
+      var gasPrice = parseInt(this.state.gasPrice + "")
+      var estGas = parseInt(this.state.estimateGas.toString())
+      const estGasEth = gasPrice*estGas/ Math.pow(10, 9);
       return (estGasEth * _this.props.conversionRate).toFixed(2)
     }
 

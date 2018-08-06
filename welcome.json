@@ -3,6 +3,7 @@
     "id": 1,
     "read": false,
     "type": "topic",
+    "title":"Store",
     "text": "Store all your tokens in one simple to use wallet.",
     "image": "./images/wallet.png"
   },
@@ -10,6 +11,7 @@
     "id": 2,
     "read": false,
     "type": "topic",
+    "title":"Send",
     "text": "Send any token without the need for MyEtherWallet.",
     "image": "./images/swiss.png"
   },
@@ -17,6 +19,7 @@
     "id": 3,
     "read": false,
     "type": "topic",
+    "title":"Receive",
     "text": "Receive Ethereum and any ERC20 token.",
     "image": "./images/swiss.png"
   },

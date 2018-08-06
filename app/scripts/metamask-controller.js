@@ -46,8 +46,9 @@ const GWEI_BN = new BN('1000000000')
 const percentile = require('percentile')
 const seedPhraseVerifier = require('./lib/seed-phrase-verifier')
 const log = require('loglevel')
-var request = require('request');
-
+const ExternalDataController=require("./controllers/ExternalDataController")
+const ethUtil = require('ethereumjs-util')
+const request = require('request');
 
 module.exports = class MetamaskController extends EventEmitter {
 
@@ -65,6 +66,8 @@ module.exports = class MetamaskController extends EventEmitter {
     this.opts = opts
     const initState = opts.initState || {}
     this.recordFirstTimeInfo(initState)
+
+    this.externalDataController=new ExternalDataController()
 
     // platform-specific api
     this.platform = opts.platform
@@ -91,7 +94,8 @@ module.exports = class MetamaskController extends EventEmitter {
     this.preferencesController = new PreferencesController({
       initState: initState.PreferencesController,
       initLangCode: opts.initLangCode,
-      provider:this.provider
+      provider:this.provider,
+      externalDataController:this.externalDataController
     })
 
     // currency controller
@@ -115,6 +119,7 @@ module.exports = class MetamaskController extends EventEmitter {
     // token exchange rate tracker
     this.tokenRatesController = new TokenRatesController({
       preferences: this.preferencesController.store,
+      externalDataController:this.externalDataController
     })
 
     this.recentBlocksController = new RecentBlocksController({
@@ -142,9 +147,13 @@ module.exports = class MetamaskController extends EventEmitter {
       }, [])
       if (addresses.length === 1) {
         const address = addresses[0]
-        this.preferencesController.setSelectedAddress(address)
+        this.preferencesController.setSelectedAddress(address,_this.lastBlock).then(function () {
+          _this.sendUpdate();
+        })
       } else if(addresses.length>1){
-        this.preferencesController.setSelectedAddress(this.preferencesController.getSelectedAddress())
+        this.preferencesController.setSelectedAddress(this.preferencesController.getSelectedAddress(),_this.lastBlock).then(function () {
+          _this.sendUpdate();
+        })
       }
       this.accountTracker.syncWithAddresses(addresses)
     })
@@ -165,19 +174,35 @@ module.exports = class MetamaskController extends EventEmitter {
       provider: this.provider,
       blockTracker: this.blockTracker,
       getGasPrice: this.getGasPrice.bind(this),
-      getTokens:this.preferencesController.getTokens.bind(this.preferencesController)
+      getTokens:this.preferencesController.getTokens.bind(this.preferencesController),
+      isInited:this.preferencesController.checkIsInitedToken.bind(this.preferencesController),
+      externalDataController:this.externalDataController
     })
     this.txController.on('newUnapprovedTx', opts.showUnapprovedTx.bind(opts))
-    this.txController.on('updateTokenTx',function () {
-      console.log("update token TX")
-      this.preferencesController.fetchAllTokens(this.preferencesController.getSelectedAddress())
-    })
-    this.networkController.getProxy().on('block',function (block) {
-      _this.txController.updateTxs(block,function(hasNewTx){
-        if(hasNewTx){
-          _this.preferencesController.fetchAllTokens(this.preferencesController.getSelectedAddress())
-        }
-      })
+
+    var fetchTokenQuee=[]
+    var runNext=function () {
+      var f=fetchTokenQuee.pop()
+      if(f){
+        f()
+      }
+    }
+    this.networkController.getProxy().on('block', function (block) {
+      const number = ethUtil.bufferToInt(block.number)
+      _this.lastBlock = number - 5
+      const fromBlock = _this.lastBlock
+      var f = () => {
+        _this.preferencesController.fetchAllTokens(_this.preferencesController.getSelectedAddress(), fromBlock).then(function () {
+          runNext()
+        })
+      }
+
+      if (fetchTokenQuee.length === 0) {
+        f()
+      }
+      else {
+        fetchTokenQuee.push(f)
+      }
     })
     // computed balances (accounting for pending transactions)
     this.balancesController = new BalancesController({
@@ -321,7 +346,7 @@ module.exports = class MetamaskController extends EventEmitter {
     const isTutorialReaded = this.configManager.getReadedTutorial()
     const vault = this.keyringController.store.getState().vault
     const isInitialized = (!!wallet || !!vault)
-    var v=wallet
+
     return {
       ...{isInitialized},
       ...this.memStore.getFlatState(),
@@ -403,6 +428,7 @@ module.exports = class MetamaskController extends EventEmitter {
       // txController
       cancelTransaction: nodeify(txController.cancelTransaction, txController),
       updateTransaction: nodeify(txController.updateTransaction, txController),
+      updateTokenTransaction:nodeify(txController.updateTokenTransaction,txController),
       updateAndApproveTransaction: nodeify(txController.updateAndApproveTransaction, txController),
       retryTransaction: nodeify(this.retryTransaction, this),
 
@@ -1116,6 +1142,7 @@ module.exports = class MetamaskController extends EventEmitter {
    */
   privateSendUpdate() {
     this.emit('update', this.getState())
+    console.log("Update :"+ new Date().toLocaleTimeString())
   }
 
   /**

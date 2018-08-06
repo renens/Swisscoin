@@ -19,15 +19,25 @@ const muiTheme = getMuiTheme({
 class App extends Component {
 
 
+  constructor(props) {
+    super(props)
+    chrome.tabs.query({ active: true }, tabs => {
+      tabs.forEach(tab=>{
+        chrome.tabs.sendMessage(tab.id,{hideAnimation:true})
+      })
+
+    })
+  }
+
   render() {
     console.warn(this)
     if (this.props.provider.type && this.props.provider.type !== "mainnet") {
       this.props.dispatch(actions.setProviderType('mainnet'))
-      return <div>hello</div>
+      return <div></div>
     }
     var mainComponent
-    if (!this.props.isTutorialReaded) {
-      mainComponent = <WelcomeScreen/>
+    if (!this.props.noActiveNotices && this.props.lastUnreadNotice) {
+      mainComponent = <WelcomeScreen notice={this.props.lastUnreadNotice}/>
     }
     else if (!this.props.isInitialized || this.props.forgottenPassword) {
       mainComponent = <CreateRestore/>
@@ -53,7 +63,8 @@ class App extends Component {
 
 function mapStateToProps(state) {
   return {
-    isTutorialReaded: state.metamask.isTutorialReaded,
+    noActiveNotices: state.metamask.noActiveNotices,
+    lastUnreadNotice:state.metamask.lastUnreadNotice,
     isInitialized: state.metamask.isInitialized,
     forgottenPassword: state.appState.forgottenPassword,
     isUnlocked: state.metamask.isUnlocked,

@@ -63,7 +63,7 @@ class CreateVault extends Component {
         <div className="wave -two"/>
         <div className="wave -three"/>
         <div className="imagery-container">
-          <img className="nav-icon" width={"100px"} src="./images/eql-white-2.png" role="presentation"/>
+          <img className="nav-icon" width={"100px"} src="./images/sw-white-2.png" role="presentation"/>
           <i className="fas fa-ellipsis-v"/>
         </div>
         <div className="balance-section">

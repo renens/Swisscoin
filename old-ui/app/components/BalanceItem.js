@@ -52,7 +52,8 @@ class BalanceItem extends Component {
   }
   formatNumber =(num,digits)=> {
     if(num) {
-      return new Intl.NumberFormat({minimumFractionDigits:digits}).format(num);// num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1'")
+      console.log(num )
+      return new Intl.NumberFormat("en-US",{maximumFractionDigits:digits,minimumFractionDigits:0}).format(num);// num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1'")
     }
     else{
       return ""
@@ -77,7 +78,7 @@ class BalanceItem extends Component {
           tokenPrice = exRate.rate;
           usdBalance = (tokenCount * exRate.rate).toFixed(2)
         }
-        else{
+        else if(exRate.usdPrice){
           tokenPrice=exRate.usdPrice
           usdBalance=exRate.usdPrice?(tokenCount*exRate.usdPrice).toFixed(2):"-"
         }
@@ -131,7 +132,7 @@ class BalanceItem extends Component {
         </div>
         <div className="change-container">
           {changeBlock}
-          <span className="currency-value">{getCurrencySymbol()} {this.formatNumber(usdBalance,2)}</span>
+          <span className="currency-value" hidden={!usdBalance}>{getCurrencySymbol()} {this.formatNumber(usdBalance,2)}</span>
           <div className="token-amount"><span>{this.formatNumber(tokenCount,8)} {name}</span></div>
     
         </div>

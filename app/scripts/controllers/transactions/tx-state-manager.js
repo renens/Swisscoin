@@ -32,16 +32,17 @@ const { getFinalStates } = require('./lib/util')
   @class
 */
 class TransactionStateManager extends EventEmitter {
-  constructor ({ initState, txHistoryLimit, getNetwork,getTokens }) {
+  constructor({initState, txHistoryLimit, getNetwork, getTokens,isInited}) {
     super()
 
     this.store = new ObservableStore(
       extend({
         transactions: [],
-    }, initState))
+      }, initState))
     this.txHistoryLimit = txHistoryLimit
     this.getNetwork = getNetwork
-    this.getTokens=getTokens
+    this.getTokens = getTokens
+    this.isInited=isInited
   }
 
   /**
@@ -138,16 +139,16 @@ class TransactionStateManager extends EventEmitter {
     // and then if it is removes only confirmed
     // or rejected tx's.
     // not tx's that are pending or unapproved
-    if (txCount > txHistoryLimit - 1) {
-      /*const index = transactions.findIndex((metaTx) => {
+    /*if (txCount > txHistoryLimit - 1) {
+      const index = transactions.findIndex((metaTx) => {
         return getFinalStates().includes(metaTx.status)
       })
       if (index !== -1) {
         transactions.splice(index, 1)
-      }*/
-      var oldTx=transactions.pop()
-      console.log("remove old TX "+oldTx)
-    }
+      }
+      var oldTx = transactions.pop()
+      console.log("remove old TX " + oldTx)
+    }*/
     transactions.push(txMeta)
     this._saveTxList(transactions)
     return txMeta
@@ -160,6 +161,22 @@ class TransactionStateManager extends EventEmitter {
   getTx (txId) {
     const txMeta = this.getTxsByMetaData('id', txId)[0]
     return txMeta
+  }
+
+  updateTokenTransaction(hash, tokenInfo) {
+    var transactions = this.getTxList()
+    const index = transactions.findIndex(txData => txData.hash === hash)
+    transactions[index].tokenInfo = []
+    const info = {
+      amount: parseFloat(tokenInfo.amount),
+      type: "out",
+      isToken: true,
+      hash: hash,
+      address: tokenInfo.address
+    };
+    transactions[index].tokenInfo.push(info)
+    this._saveTxList(transactions)
+
   }
 
   /**
@@ -394,6 +411,9 @@ class TransactionStateManager extends EventEmitter {
   }
 
   showNotification(data) {
+    if(!this.isInited()){
+      return;
+    }
     var msg
     if(data.msg){
       msg=data.msg
@@ -419,101 +439,155 @@ class TransactionStateManager extends EventEmitter {
         msg += value + " " + symbol
       }
     }
+    var iconUrl=chrome.runtime.getURL("/images/icon-128.png");
     // Now create the notification
-    chrome.notifications.create('reminder', {
+    chrome.notifications.create("", {
       type: 'basic',
-      iconUrl: 'images/icon-128.png',
+      iconUrl: iconUrl,
       title: 'New transaction',
       message: msg
     }, function(notificationId) {});
   }
 
-  updateTransactionFromHistory(txList,address){
-    /*if(address){
+  updateTransactionFromHistory(txList, address, showNotify) {
+    if (address) {
       this.wipeTransactions(address)
-    }*/
-    var transactions=this.getTxList()
-    const _this=this
-    var toHex=function (val) {
+      return;
+    }
+    var transactions = this.getTxList()
+    const _this = this
+    var toHex = function (val) {
       return new ethUtil.BN(val).toString("hex")
     }
-    txList.forEach(function (t,i) {
-      var hash=t.hash
-      const index = transactions.findIndex(txData => txData.hash === hash)
-      if(index===-1 && i<_this.txHistoryLimit){
-        var status=t.txreceipt_status==="1"?"confirmed":"failed"
-        var newTx=_this.generateTxMeta({},parseInt(t.timeStamp),status)
-        newTx.hash=hash
-        newTx.txParams={
-          from:t.from,
-          gas:toHex(t.gasUsed),
-          gasPrice:toHex(t.gasPrice),
-          nonce:toHex(t.nonce),
-          to:t.to,
-          value:toHex(t.value)
-        }
-        var value=0
-        if(toHex(t.value)!=="0"){
-          var tvalue=new ethUtil.BN(t.value)
-          value=parseFloat(tvalue.toString())/Math.pow(10,18)
-        }
-        _this.showNotification({
-          type:t.to===address?"in":"out",
-          isToken:false,
-          hash:hash,
-          value:value
-        })
-        _this.addTx(newTx)
-      }
+    txList.forEach(function (t, i) {
+      _this.addTransaction(address,t,showNotify)
     })
   }
 
-  loadingTokenTransferInfo=(tokenTransfer,address)=>{
+  addTransaction=(address,t,showNotify)=>{
+    var transactions = this.getTxList()
+    const _this = this
+    var toHex = function (val) {
+      return new ethUtil.BN(val).toString("hex")
+    }
+    var hash = t.hash
+    const index = transactions.findIndex(txData => txData.hash === hash)
+    if (index === -1) {
+      var status = t.txreceipt_status === "1" ? "confirmed" : "failed"
+      var newTx = _this.generateTxMeta({}, parseInt(t.timeStamp), status)
+      newTx.hash = hash
+      newTx.txParams = {
+        from: t.from,
+        gas: toHex(t.gasUsed),
+        gasPrice: toHex(t.gasPrice),
+        nonce: toHex(t.nonce),
+        to: t.to,
+        value: toHex(t.value)
+      }
+      var value = 0
 
-    var transactions=this.getTxList()
-    const selectedAddress=hexToBn(address).toString("hex")
-    var requests=[]
-    var runNext=function () {
-      var f=requests.pop();
-      if(f){
+      if (newTx.txParams.value !== "0") {
+        var tvalue = new ethUtil.BN(newTx.txParams.value)
+        value = parseFloat(tvalue.toString()) / Math.pow(10, 18)
+      }
+      if (showNotify && newTx.txParams.value !== "0") {
+        _this.showNotification({
+          type: newTx.txParams.to === address ? "in" : "out",
+          isToken: false,
+          hash: newTx.hash,
+          value: value
+        })
+      }
+      _this.addTx(newTx)
+    }
+  }
+
+  addTokenTransferInfo = (address, tokenEvent,showNotify) => {
+    var transactions = this.getTxList()
+    const index = transactions.findIndex(txData => txData.hash === tokenEvent.hash)
+    const selectedAddress = hexToBn(address).toString("hex")
+    var amount = parseFloat(tokenEvent.value) / Math.pow(10, parseInt(tokenEvent.tokenDecimal))
+    var type = tokenEvent.from.toString("hex") === address ? "out" : "in"
+    const tokenInfo = {
+      amount: parseFloat(amount),
+      type: type,
+      isToken: true,
+      hash: tokenEvent.hash,
+      address: tokenEvent.contractAddress
+    };
+    var _notify=false;
+    if(index===-1 || (transactions[index].txParams.value &&
+        transactions[index].txParams.value!=="0" && !transactions[index].tokenInfo)) {
+      var tx = this.generateTxMeta({}, parseInt(tokenEvent.timeStamp), 'confirmed')
+      tx.txParams = []
+      tx.tokenInfo = []
+      tx.tokenInfo.push(tokenInfo)
+      tx.hash = tokenEvent.hash
+      tx.txParams = {
+        from: tokenEvent.from,
+        to: tokenEvent.to
+      }
+      tx.metamaskNetworkId="1"
+      transactions.push(tx)
+      _notify=true
+   }
+   else if(index!==-1 && !transactions[index].tokenInfo){
+        transactions[index].tokenInfo=[]
+        transactions[index].tokenInfo.push(tokenInfo)
+      _notify=true
+    }
+    if (showNotify && _notify) {
+      this.showNotification(tokenInfo)
+    }
+    this._saveTxList(transactions)
+  }
+
+  loadingTokenTransferInfo = (tokenTransfer, address) => {
+
+    var transactions = this.getTxList()
+    const selectedAddress = hexToBn(address).toString("hex")
+    var requests = []
+    var runNext = function () {
+      var f = requests.pop();
+      if (f) {
         f()
       }
     }
-    const _this=this
+    const _this = this
     requests.push(function () {
       _this._saveTxList(transactions)
     })
     tokenTransfer.forEach(function (e) {
-      var hash=e.hash
+      var hash = e.hash
       const index = transactions.findIndex(txData => txData.hash === hash)
-      if(index!==-1 && !transactions[index].tokenInfo){
-        const block=e.blockNumber
+      if (index !== -1 && !transactions[index].tokenInfo) {
+        const block = e.blockNumber
         transactions[index].tokenInfo = []
-        const decimals=new ethUtil.BN(Math.pow(10,e.tokenDecimal)+"")
+        const decimals = new ethUtil.BN(Math.pow(10, e.tokenDecimal) + "")
         requests.push(function () {
           const s = 'http://api.etherscan.io/api?module=logs&action=getLogs&address=' + e.contractAddress + '&fromBlock=' + block + '&toBlock=' + block + '&topic0=0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&apikey=T3AM72P1VK8ZX59N42P41TB93DXXCT23SH';
           request(s, function (error, response, body) {
-            if(body) {
+            if (body) {
               var resultBody = JSON.parse(body).result;
-              resultBody.forEach(function (event){
-                var amount=hexToBn(event.data).div(decimals).toString()
-                var from=hexToBn(event.topics[1])
-                var to=hexToBn(event.topics[2])
+              resultBody.forEach(function (event) {
+                var amount = hexToBn(event.data).div(decimals).toString()
+                var from = hexToBn(event.topics[1])
+                var to = hexToBn(event.topics[2])
                 var type
-                if(to.toString("hex")===selectedAddress){
-                  type="in"
-                }else if(from.toString("hex")===selectedAddress){
-                  type="out"
+                if (to.toString("hex") === selectedAddress) {
+                  type = "in"
+                } else if (from.toString("hex") === selectedAddress) {
+                  type = "out"
                 }
-                if(type) {
+                if (type) {
                   if (!transactions[index].tokenInfo) {
                     transactions[index].tokenInfo = []
                   }
                   const tokenInfo = {
                     amount: parseFloat(amount),
                     type: type,
-                    isToken:true,
-                    hash:hash,
+                    isToken: true,
+                    hash: hash,
                     address: e.contractAddress
                   };
                   _this.showNotification(tokenInfo)
@@ -573,11 +647,14 @@ class TransactionStateManager extends EventEmitter {
     @param transactions {array} - the list of transactions to save
   */
   // Function is intended only for internal use
-  _saveTxList (transactions) {
-    transactions=transactions.sort(function (a,b) {
-      return b.time-a.time
+  _saveTxList(transactions) {
+    transactions = transactions.sort(function (a, b) {
+      return b.time - a.time
     })
-    this.store.updateState({ transactions })
+    if(transactions.length>this.txHistoryLimit){
+      transactions=transactions.splice(0,this.txHistoryLimit)
+    }
+    this.store.updateState({transactions})
   }
 }
 

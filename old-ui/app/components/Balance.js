@@ -46,7 +46,7 @@ class Balance extends Component {
         if (val.decimals && (typeof val.balance === 'string' || val.balance instanceof String)) {
           val.balance = val.balance / Math.pow(10, val.decimals)
         }
-        if (val.owner === _this.props.state.metamask.selectedAddress) {
+        if (val.owner === _this.props.state.metamask.selectedAddress && val.balance!==0) {
           if (val.address.toLowerCase() === util.SWISSToken.toLowerCase()) {
             tokens.unshift(val)
           }

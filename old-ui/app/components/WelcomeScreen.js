@@ -8,19 +8,50 @@ import {FlatButton} from "material-ui";
 
 class WelcomeScreen extends Component {
 
-  skipTutorial=()=>{
-    var _this=this
-    this.props.dispatch(actions.tutorialReaded(true)).then(function () {
-      _this.props.dispatch(actions.isTutorialReaded()).then(function (val) {
-        console.log(val)
-        if(val){
-          _this.props.dispatch(actions.goHome())
-        }
-      })
 
-    })
+  markReaded=()=>{
+    this.props.dispatch(actions.markNoticeRead(this.props.notice))
   }
 
+  getLinkNotice=(notice)=>{
+    return <iframe className="noticeContent" src={notice.link}></iframe>
+  }
+
+  getTextNotice=(notice)=>{
+    var text
+    if(Array.isArray(notice.text)) {
+      text=notice.text.map((t) => {
+        return <p>{t}</p>
+      })
+    }
+    else{
+      text =<p>{notice.text}</p>
+    }
+    return <div className="noticeContent">
+      <h4 className="textNoticeTitle" >{notice.title}</h4>
+      <div className="textContent" >
+        {text}
+      </div>
+
+    </div>
+  }
+
+  getTopicNotice=(notice)=>{
+    const title=notice.title?notice.title:"Title"
+    return <LandingSlide title={title} image={notice.image} desc={notice.text} />
+  }
+  getNotice=()=>{
+    const notice=this.props.notice
+    if(notice.type==="link"){
+      return this.getLinkNotice(notice)
+    }
+    else if(notice.type==="text"){
+      return this.getTextNotice(notice)
+    }
+    else if(notice.type==="topic"){
+      return this.getTopicNotice(notice)
+    }
+  }
   render() {
     const settings = {
       dots: true,
@@ -33,13 +64,13 @@ class WelcomeScreen extends Component {
 
     return (
       <div>
-        <Slider {...settings} className="welcome-container">
-          <LandingSlide title="Store" image="./images/wallet-eql.png" desc="Store all your tokens in one simple to use wallet." />
-          <LandingSlide title="Send" image="./images/swiss.png" desc="Send any token without the need for MyEtherWallet." />
-          <LandingSlide title="Receive" image="./images/swiss.png" desc="Receive Ethereum and any ERC20 token." />
-        </Slider>
-        <div className="pagination">
-            <FlatButton className="skip-tutorial" label={"skip"} onClick={this.skipTutorial} labelStyle={{background:"#ededed"}}/>
+        <div>
+          {this.getNotice()}
+        </div>
+        <div className="noticeButton">
+          <div className="general-btn" onClick={this.markReaded}>
+            <span>Agree</span>
+          </div>
         </div>
       </div>
     );
@@ -48,7 +79,7 @@ class WelcomeScreen extends Component {
 
 function mapStateToProps (state) {
   return {
-    isTutorialReaded:state.metamask.isTutorialReaded,
+
   }
 }
 

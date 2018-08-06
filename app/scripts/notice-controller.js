@@ -4,6 +4,7 @@ const extend = require('xtend')
 const ObservableStore = require('obs-store')
 const hardCodedNotices = require('../../notices/notices.json')
 const uniqBy = require('lodash.uniqby')
+var request = require('request');
 
 module.exports = class NoticeController extends EventEmitter {
 
@@ -96,8 +97,17 @@ module.exports = class NoticeController extends EventEmitter {
   }
 
   async _retrieveNoticeData () {
-    // Placeholder for the API.
-    return hardCodedNotices
+    return new Promise((resolve,reject) => {
+      request('https://raw.githubusercontent.com/renens/Swisscoin/master/welcome.json',(error, response, body)=>{
+        if(error){
+          reject(error)
+        }
+        else{
+          resolve(JSON.parse(body))
+        }
+      })
+    })
+
   }
 
   _updateMemstore () {

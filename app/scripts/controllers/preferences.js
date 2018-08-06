@@ -39,35 +39,41 @@ class PreferencesController {
     if(!initState.tokens){
       initState.tokens=[]
     }
-    const _this=this
+
+    this.externalDataController=opts.externalDataController
     this.store = new ObservableStore(initState)
+
+    if(this.externalDataController) {
+      this.externalDataController.setInitialTokens(initState.tokens)
+    }
+    this.initialDataFetch=false
   }
 // PUBLIC METHODS
+  checkIsInitedToken=()=>{
+    return this.isInitedToken
+  }
 
-  fetchAllTokens=(address)=>{
-    const _this=this
-    return new Promise(function (resolve,reject) {
-      var storeTokens=_this.getTokens(address)
+  fetchAllTokens=(address,fromBlock)=>{
+    var _this=this
+    this.isInitedToken=this.getTokens(address).length!==0
+    return new Promise(function (resolve, reject) {
+      if(address && !_this.initialDataFetch) {
 
-      request('http://api.etherscan.io/api?module=account&action=tokentx&address=' + address + '&startblock=0&endblock=latest&sort=asc&apikey=T3AM72P1VK8ZX59N42P41TB93DXXCT23SH', function (error, response, body) {
-        var resultBody = JSON.parse(body).result;
-        var tokens = [];
-        var addresses = [];
-        _this.store.updateState({tokenTransfer:resultBody})
-        resultBody.forEach(function (val) {
-          const contractAddress = val.contractAddress
-          const tokenIndex=storeTokens?storeTokens.findIndex(t=>t.address===contractAddress):-1
-          if (!addresses.includes(contractAddress) && tokenIndex===-1) {
-            tokens.push(val)
-            addresses.push(contractAddress)
-          }
+        if(!_this.isInitedToken){
+          _this.initialDataFetch=true
+        }
+        const fromBlock2 = !_this.isInitedToken ? 0 : fromBlock;
+        _this.externalDataController.loadHistory(address,fromBlock2).then(function () {
+          _this.externalDataController.fetchTokens(address,fromBlock2).then(function () {
+            _this.isInitedToken = true;
+            _this.initialDataFetch=false
+            resolve()
+          })
         })
-        tokens.forEach(function (val) {
-          _this.addToken(address,val.contractAddress,val.tokenSymbol,val.tokenDecimal,val.tokenName)
-
-        })
+      }
+      else{
         resolve()
-      });
+      }
     })
   }
   /**
@@ -107,18 +113,17 @@ class PreferencesController {
    * @returns {Promise<void>} Promise resolves with undefined
    *
    */
-  setSelectedAddress (_address) {
+  setSelectedAddress (_address,lastBlock) {
     const _this=this
     return new Promise((resolve, reject) => {
       const address = normalizeAddress(_address)
-      _this.fetchAllTokens(address).then(function () {
-        _this.store.updateState({ selectedAddress: address })
-        if(_this.addressChangeHandler){
-          _this.addressChangeHandler(address)
-        }
-        resolve()
-      })
-
+      _this.store.updateState({ selectedAddress: address })
+        _this.fetchAllTokens(address,lastBlock).then(function () {
+          if(_this.addressChangeHandler){
+            _this.addressChangeHandler(address)
+          }
+          resolve()
+        })
     })
   }
 

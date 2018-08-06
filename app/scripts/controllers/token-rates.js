@@ -9,7 +9,7 @@ const Token = require('../lib/token')
 const cheerio = require('cheerio');
 
 // By default, poll every 3 minutes
-const DEFAULT_INTERVAL = 180 * 1000
+const DEFAULT_INTERVAL = 60 * 1000
 
 const BASEURL = "https://etherscan.io/"
 
@@ -23,7 +23,7 @@ class TokenRatesController {
    *
    * @param {Object} [config] - Options to configure controller
    */
-  constructor({interval = DEFAULT_INTERVAL, preferences} = {}) {
+  constructor({interval = DEFAULT_INTERVAL, preferences,externalDataController} = {}) {
     this.store = new ObservableStore()
     this.preferences = preferences
     this.interval = interval
@@ -33,7 +33,12 @@ class TokenRatesController {
     this.isLoading=false
     this.isActive=true
     // this.enableRequestHandler()
+    var _this=this
     this.tokens=preferences.getState().tokens
+    externalDataController.on("newToken",function (f) {
+      _this.updateExchangeRates().then(f)
+    })
+
   }
 
   enableRequestHandler = () => {

@@ -25,7 +25,16 @@
     wrapper.style.right = "20px";
     var imageUrl = chrome.runtime.getURL("/images/loading.gif");
     console.warn("Home url " + imageUrl)
-    wrapper.innerHTML = "<div style='position: absolute; width: 100%; z-index: -1;'><div style=' margin:auto; display:block; width: 100px; margin-top: 240px;' ><img style='width:100px' src='https://cdn.discordapp.com/attachments/385459477421359104/453873653680177164/ether-diamond.gif'></div></div>";
+    wrapper.innerHTML = "<div style='position: absolute; width: 100%; z-index: -1;'>" +
+
+      "</div>";
+
+    var loading=document.createElement('div')
+    loading.innerHTML="<div style=' margin:auto; display:block; width: 100px; margin-top: 240px;' >" +
+    "<img style='width:100px' src='https://cdn.discordapp.com/attachments/385459477421359104/453873653680177164/ether-diamond.gif'>" +
+    "</div>"
+
+    wrapper.appendChild(loading)
 
     wrapper.style.backgroundColor = "#fff";
     var iframe = document.createElement('iframe');
@@ -40,6 +49,11 @@
     // wrapper.onmouseout=function () {
     //   this.hidden=true
     // }
+    chrome.runtime.onMessage.addListener(function (message) {
+      if (message && message.hideAnimation) {
+        loading.remove()
+      }
+    })
   }
   else {
     if (d.hidden) {

@@ -32,7 +32,7 @@ class ComputedbalancesController {
       _this.tokenTracker = new TokenTracker({
         userAddress: address,
         provider: provider,
-        poolingInterval: 5000,
+        poolingInterval: 1000,
         tokens: preferencesController.getTokens(address)
       })
       if (_this.tokenTrackerWatcher) {
@@ -57,7 +57,10 @@ class ComputedbalancesController {
     const _this = this
     return new Promise(function (resolve, reject) {
       if (_this.tokenTracker) {
-        resolve(_this.tokenTracker.serialize())
+        _this.tokenTracker.updateBalances().then(function () {
+          resolve(_this.tokenTracker.serialize())
+        })
+
       }
       else {
         _this.tokenTrackerWatcher = function () {
