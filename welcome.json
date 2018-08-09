@@ -1,51 +1,29 @@
 {
   "topics": [
     {
-      "title": "Store",
-      "text": "Store all your tokens in one simple to use wallet.",
+      "title": "SWISSWALLET",
+      "text": "Send and Receive ETH & any ERC-20 Token of your choice",
       "image": "./images/wallet.png"
     },
     {
-      "title": "Send",
-      "text": "Send any token without the need for MyEtherWallet.",
+      "title": "SWISSWALLET",
+      "text": "Automatic Smart Contract detection",
       "image": "./images/swiss.png"
     },
     {
-      "title": "Receive",
-      "text": "Receive Ethereum and any ERC20 token.",
+      "title": "SWISSWALLET",
+      "text": "24h asset price tracking & automatic fee calculation",
       "image": "./images/swiss.png"
     }
   ],
   "terms": [
-    {
-      "type": "text",
-      "title": "FOREWORD",
-      "text": [
-        "Why Crypto currency? Why explore a topic as dry as finance? Technology always has trends but why the excitement for this particular technology? The cynical view may answer that it is simply the latest method people have found to play the slot machine, dumb old speculation in a new garb. And certainly the usage statistics of Bitcoin and Ethereum tend to support that vision at the moment. Ethereum is 99% financial transactions and 1% usage right now, Bitcoin is even worst. ",
-        "So why the hype? What is it that Merkel trees, a rather obscure branch of cryptography, previously only used for stealing music online via P2P downloads suddenly fascinate the planet? Well a lot of it is indeed just speculation. We have seen the scams such as BitConnect and others bring in billions of dollars in a very short amount of time and no one in their right minds would say that these investors are rational. In fact, they know just enough to get themselves into trouble.",
-        "But we also know that the current system of trade and exchanges on this entire planet is flawed. Deeply flawed insofar as it belongs to a very small number of people, and these people have engineered rules and regulations mean to obtain an ever growing piece of the global wealth and prosperity pie.",
-        "Furthermore they have failed to innovate, preferring to keep their dominance intact via market and legal manipulation rather than innovative progress. This has resulted in the current 6% failure rate on SWIFT wire payments, high fees, slow transfer times, legal hurdles, poor customer service and a 10% fraud rate on Credit cards, the main mode of payment over the internet.",
-        "This system is too deeply entrenched to be ever displaced, but it can be transcended. Crypto currency, and specifically decentralized ledgers and distributed applications working together have the power to utterly replace this failing system with a new, rapid, honest and fair system; a system where no one can put their foot on the gas pedal because there isn’t one.",
-        "This public option, reliant on years of open source development is still only a promise, in order to achieve it we must move away from speculation and firmly into usage. We have to move into using crypto currency to pay for butter and bread and rent and trips abroad.",
-        "Our vision is that this should be achieved via the path of least resistance, and we believe to have found a thread towards that path. That is Swisscoin.",
-        "Thank you for your time and interest. Please reach out via our website if you wish to contact us. "
-      ]
-    }
   ],
   "news": [
-    {
-      "id":2,
-      "type": "news",
-      "title": "Release notes v0.1.6",
-      "text": "Several server changes"
-    },
-    {
-      "id":3,
-      "type": "news",
-      "title": "Release notes v0.1.7",
-      "text": "Fixed welcome screen"
-    }
   ],
   "links": [
+    {
+      "id":99,
+      "link": "https://swisstc-eacf7.firebaseapp.com/"
+    }
   ]
 }
