@@ -40,7 +40,7 @@
       "text": "Several server changes"
     },
     {
-      "id":3
+      "id":3,
       "type": "news",
       "title": "Release notes v0.1.7",
       "text": "Fixed welcome screen"
