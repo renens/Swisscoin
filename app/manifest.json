@@ -1,7 +1,7 @@
 {
   "name": "SWISS Wallet",
   "short_name": "SWISS Wallet",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "manifest_version": 2,
   "author": "https://www.swisscoinlab.ch/eql",
   "description": "SWISS wallet browser extension",
