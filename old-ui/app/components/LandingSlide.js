@@ -13,6 +13,7 @@ export default class LandingSlide extends Component {
     const { title } = this.props;
     const { desc } = this.props;
     const { image } = this.props;
+    const textClass=this.props.isText?"descriptionText":"description"
     return (
       <div className="chrome-extension-container tutorial">
         <Wave waveType="one" />
@@ -28,7 +29,7 @@ export default class LandingSlide extends Component {
           <img className="float floating-logos float-5" src="./images/status-logo.png" role="presentation" />
         </div>
         <div className="logo" />
-        <div className="description">{desc}</div>
+        <div className={textClass}>{desc}</div>
       </div>
     );
   }

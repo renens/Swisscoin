@@ -103,12 +103,9 @@ class BalanceItem extends Component {
     const priceBlock = <div className="token-amount"><span>{getCurrencySymbol} {tokenPrice}</span> </div>
 
 
-    const eqlBgClass = classnames({
-      'eql-logo': tokenType === 'eql',
-    });
     var getIcon = function () {
       if (image !== "") {
-        return <img onClick={_this.showDetail} className={eqlBgClass} src={image}  role="presentation"/>
+        return <img onClick={_this.showDetail}  src={image}  role="presentation"/>
       }
       else{
         return <FloatingActionButton mini={true} onClick={_this.showDetail} backgroundColor={"#7d878d"} style={{color:"#fbb03f"}} iconStyle={{color:"#fbb03f"}}>

@@ -98,12 +98,52 @@ module.exports = class NoticeController extends EventEmitter {
 
   async _retrieveNoticeData () {
     return new Promise((resolve,reject) => {
-      request('https://raw.githubusercontent.com/renens/Swisscoin/master/welcome.json',(error, response, body)=>{
+      var ts=new Date().getTime()
+      request('https://raw.githubusercontent.com/renens/Swisscoin/master/welcome.json?'+ts,(error, response, body)=>{
         if(error){
           reject(error)
         }
         else{
-          resolve(JSON.parse(body))
+          var notices=[]
+          var allData=JSON.parse(body)
+          if(allData.topics && allData.topics.length>0) {
+            notices.push({
+              id: 1,
+              type: 'topics',
+              read: false,
+              data: allData.topics
+            })
+          }
+          if(allData.news && allData.news.length>0) {
+            let last = allData.news.pop();
+            notices.push({
+              id: last.id,
+              type: 'news',
+              read: false,
+              data: last
+            })
+          }
+          if(allData.terms && allData.terms.length>0) {
+            allData.terms.forEach((t)=>{
+              notices.push({
+                id: t.id,
+                type: 'text',
+                read: false,
+                data: t
+              })
+            })
+          }
+          if(allData.links && allData.links.length>0) {
+            allData.links.forEach((l)=>{
+              notices.push({
+                id: l.id,
+                type: 'link',
+                read: false,
+                data: l
+              })
+            })
+          }
+          resolve(notices)
         }
       })
     })
@@ -113,7 +153,8 @@ module.exports = class NoticeController extends EventEmitter {
   _updateMemstore () {
     const lastUnreadNotice = this.getLatestUnreadNotice()
     const noActiveNotices = !lastUnreadNotice
-    this.memStore.updateState({ lastUnreadNotice, noActiveNotices })
+    const unreadNoticeCount=this.getUnreadNotices().length
+    this.memStore.updateState({ lastUnreadNotice, noActiveNotices,unreadNoticeCount })
   }
 
 }

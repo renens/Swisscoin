@@ -279,6 +279,23 @@ img.float-5 {
 
 }
 
+.descriptionText {
+  color: #000000;
+  font-weight: 200;
+  position: absolute;
+  height: 200px;
+  overflow: auto;
+  left: 10px;
+  bottom: 50px;
+  z-index: 1;
+  line-height: 25px;
+  text-align: left;
+  transform: translate3d(0, 0, 0);
+  letter-spacing: .05em;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+
+}
 
 /*** Pagination ***/
 
@@ -453,11 +470,11 @@ img.nav-icon {
 .wallet-address {
   white-space: nowrap;
   overflow: hidden;
-  margin: auto;
   font-size: 11px;
   color: #fbb03f;
-  float: left;
   cursor: pointer;
+  margin-right: 20px;
+  text-align: center;
 }
 
 .wallet-address-container i.far.fa-copy {
@@ -471,6 +488,8 @@ img.nav-icon {
 .copyIcon{
   margin-left: 5px;
   cursor: pointer;
+  float: right;
+  margin-top: -18px;
 }
 
 span.percent-up {
@@ -518,11 +537,6 @@ span.percent-up {
   height: 280px;
 }
 
-.eql-logo {
-  border-radius: 50%;
-  background-color:#0af;
-  padding: 2px 2px 1px;
-}
 
 .token-list ul li {
   width: calc(100% - 30px);
@@ -1020,6 +1034,7 @@ i.fas.fa-ellipsis-v {
   border: 2px solid #dfe7ec!important;
   border-radius: 6px;
   background-color: #dfe7ec6e;
+  resize: none;
 }
 
 .backup-suggestion {
@@ -1290,15 +1305,6 @@ i.fas.fa-ellipsis-v {
 .midnight-theme .mdl-textfield--floating-label.is-focused .mdl-textfield__label, .mdl-textfield--floating-label.is-dirty .mdl-textfield__label, .mdl-textfield--floating-label.has-placeholder .mdl-textfield__label {
   color: rgb(6, 172, 255)!important;
 }
-
-.eql-btn-logo{
-  width: 38px!important;
-  right: 8px!important;
-  top: 0px!important;
-  background: rgba(0,0,0,0)!important;
-}
-
-
 
 /*** Fees ***/
 .fee-summary {
@@ -1721,7 +1727,7 @@ i.fas.fa-ellipsis-v {
 }
 
 .welcome-container{
-  height: 563px;
+  height: 540px;
 }
 
 /** Navigation Footer **/

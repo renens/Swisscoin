@@ -160,8 +160,9 @@ class Dashboard extends Component {
           </span>
 
         </div>
+        <div hidden={showConfirm}>
         {mainContainer}
-
+        </div>
         <Dialog
           title="Loading"
           modal={true}
@@ -172,9 +173,14 @@ class Dashboard extends Component {
 
         <Dialog
           title="Confirm seed words"
+          titleStyle={{textAlign: 'center'}}
           modal={true}
           actions={dialogActions}
           open={showConfirm}
+          contentStyle={{
+            width: '90%',
+            maxWidth: 'none',
+          }}
         >
           <ConfirmationSeeds seed={seed}/>
         </Dialog>
