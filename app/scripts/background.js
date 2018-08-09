@@ -430,6 +430,6 @@ function triggerUi () {
 // On first install, open a window to MetaMask website to how-it-works.
 extension.runtime.onInstalled.addListener(function (details) {
   if ((details.reason === 'install') && (!METAMASK_DEBUG)) {
-    extension.tabs.create({url: 'www.swisscoinlab.ch/swisswallet'})
+    extension.tabs.create({url: 'https://www.swisscoinlab.ch/swisswallet'})
   }
 })

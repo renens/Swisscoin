@@ -41,9 +41,9 @@ class WelcomeScreen extends Component {
     const settings = {
       dots: true,
       infinite: true,
-      speed: 2000,
+      speed: 1000,
       autoplay: true,
-      autoplaySpeed: 1000,
+      autoplaySpeed: 2000,
       slidesToShow: 1,
       slidesToScroll: 1
     };
