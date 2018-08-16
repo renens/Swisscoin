@@ -262,24 +262,23 @@ img.float-5 {
 
 }
 
+.welcome-container{
+  top:350px;
+}
 /*** Description ***/
 
 .description {
-	color: #000000;
-    font-weight: 400;
-    position: absolute;
-    padding: 30px;
-    left: 0;
-    bottom: 50px;
-    text-align: center;
-    z-index: 1;
-    line-height: 25px;
-    text-align: center;
-    transform: translate3d(0, 0, 0);
-    letter-spacing: .05em;
-    font-size: 15px;
-    text-rendering: optimizeLegibility;
-
+  color: #000000;
+  font-weight: 400;
+  padding: 50px;
+  top: -20px;
+  z-index: 1;
+  line-height: 25px;
+  text-align: center;
+  transform: translate3d(0, 0, 0);
+  letter-spacing: .05em;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
 }
 
 .descriptionText {
@@ -1729,9 +1728,6 @@ i.fas.fa-ellipsis-v {
   from { transform: rotate(360deg); }
 }
 
-.welcome-container{
-  height: 540px;
-}
 
 /** Navigation Footer **/
 .app-footer {

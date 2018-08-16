@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react';
-import Wave from './Wave';
+
 
 export default class LandingSlide extends Component {
 
@@ -15,22 +15,7 @@ export default class LandingSlide extends Component {
     const { image } = this.props;
     const textClass=this.props.isText?"descriptionText":"description"
     return (
-      <div className="chrome-extension-container tutorial">
-        <Wave waveType="one" />
-        <Wave waveType="two" />
-        <Wave waveType="three" />
-        <div className="title">{title}</div>
-        <div className="imagery-container">
-          <img className="float float-0" src={image} role="presentation" />
-          <img className="float floating-logos float-1" src="./images/ethereum-logo.png" role="presentation" />
-          <img className="float floating-logos float-2" src="./images/0x-logo.png" role="presentation" />
-          <img className="float floating-logos float-3" src="./images/augur-logo.png" role="presentation" />
-          <img className="float floating-logos float-4" src="./images/bnb-logo.png" role="presentation" />
-          <img className="float floating-logos float-5" src="./images/status-logo.png" role="presentation" />
-        </div>
-        <div className="logo" />
-        <div className={textClass}>{desc}</div>
-      </div>
+        <div className="description">{desc}</div>
     );
   }
 }

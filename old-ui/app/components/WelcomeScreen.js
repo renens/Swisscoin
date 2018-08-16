@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import Slider from 'react-slick';
+import Wave from './Wave';
 
 const actions = require('../../../ui/app/actions')
 import LandingSlide from './LandingSlide';
@@ -41,9 +42,9 @@ class WelcomeScreen extends Component {
     const settings = {
       dots: true,
       infinite: true,
-      speed: 1000,
+      speed: 2000,
       autoplay: true,
-      autoplaySpeed: 5000,
+      autoplaySpeed: 6000,
       slidesToShow: 1,
       slidesToScroll: 1
     };
@@ -55,9 +56,26 @@ class WelcomeScreen extends Component {
       )
     })
 
-    return <Slider {...settings} className="welcome-container">
-      {slides}
-    </Slider>
+    return (
+    <div className="chrome-extension-container tutorial ">
+      <Wave waveType="one"/>
+      <Wave waveType="two"/>
+      <Wave waveType="three"/>
+      <div className="title">SWISSWALLET</div>
+      <div className="imagery-container">
+        <img className="float float-0" src="./images/wallet.png" role="presentation"/>
+        <img className="float floating-logos float-1" src="./images/ethereum-logo.png" role="presentation"/>
+        <img className="float floating-logos float-2" src="./images/0x-logo.png" role="presentation"/>
+        <img className="float floating-logos float-3" src="./images/augur-logo.png" role="presentation"/>
+        <img className="float floating-logos float-4" src="./images/bnb-logo.png" role="presentation"/>
+        <img className="float floating-logos float-5" src="./images/status-logo.png" role="presentation"/>
+      </div>
+      <div className="logo"/>
+      <Slider {...settings} className="welcome-container">
+        {slides}
+      </Slider>
+    </div>)
+
 
   }
 

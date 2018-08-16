@@ -1,7 +1,7 @@
 {
   "name": "Swisscoinlab ERC-20 Wallet",
   "short_name": "Swisscoinlab Wallet",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "manifest_version": 2,
   "author": "https://www.swisscoinlab.ch/eql",
   "description": "We make ERC-20 Tokens easy to use",
