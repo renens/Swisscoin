@@ -21,12 +21,17 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    chrome.tabs.query({ active: true }, tabs => {
-      tabs.forEach(tab=>{
-        chrome.tabs.sendMessage(tab.id,{hideAnimation:true})
-      })
+    if(chrome.tabs) {
+      chrome.tabs.query({active: true}, tabs => {
+        tabs.forEach(tab => {
+          chrome.tabs.sendMessage(tab.id, {hideAnimation: true})
+        })
 
-    })
+      })
+    }
+    else{
+     props.dispatch(actions.hideLoading())
+    }
   }
 
   render() {
@@ -48,12 +53,13 @@ class App extends Component {
     else {
       mainComponent = <Dashboard/>
     }
+    var cssUrl=chrome.runtime.getURL("/css/style.css")
     return (
       //
       <MuiThemeProvider>
 
         <div style={{overflow:"hidden"}}>
-          <link rel="stylesheet" href="/css/style.css"/>
+          <link rel="stylesheet" href={cssUrl}/>
           {mainComponent}
         </div>
       </MuiThemeProvider>

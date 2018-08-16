@@ -281,7 +281,8 @@ var actions = {
   tutorialReaded: tutorialReaded,
   isTutorialReaded,
   getTokenInfo:getTokenInfo,
-  getTokenBalance:getTokenBalance
+  getTokenBalance:getTokenBalance,
+  hideLoading
 }
 
 module.exports = actions
@@ -298,6 +299,18 @@ function goHome() {
   }
 }
 
+function hideLoading() {
+  return dispath =>{
+    return new Promise((resolve, reject) => {
+      background.hideLoading( error => {
+        if (error) {
+          return reject(error)
+        }
+        resolve()
+      })
+    })
+  }
+}
 // async actions
 
 function tryUnlockMetamask(password) {

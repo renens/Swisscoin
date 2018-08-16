@@ -31,6 +31,7 @@ const debug = require('gulp-debug')
 const pify = require('pify')
 const gulpMultiProcess = require('gulp-multi-process')
 const endOfStream = pify(require('end-of-stream'))
+const splitter = require('browserify-splitter');
 
 function gulpParallel(...args) {
   return function spawnGulpChildProcess(cb) {
@@ -503,6 +504,7 @@ function generateBundler(opts, performBundle) {
   return bundler
 }
 
+
 function discTask(opts) {
   opts = Object.assign({
     buildWithFullPaths: true,
@@ -521,6 +523,7 @@ function discTask(opts) {
     const discPath = path.join(discDir, `${opts.label}.html`)
 
     return (
+      //.plugin('factor-bundle',{outputs:['bundle/'+opts.filename]})
       bundler.bundle()
         .pipe(disc())
         .pipe(fs.createWriteStream(discPath))
@@ -537,8 +540,10 @@ function bundleTask(opts) {
   return performBundle
 
   function performBundle() {
+    //bundler.plugin('factor-bundle',{outputs:['bundle/'+opts.filename]})
     let buildStream = bundler.bundle()
-
+      //.plugin('factor-bundle',{outputs:['bundle/'+opts.filename]})
+//
     // handle errors
     buildStream.on('error', (err) => {
       beep()
@@ -581,7 +586,10 @@ function bundleTask(opts) {
 
     // write completed bundles
     opts.destinations.forEach((dest) => {
+      //bundler.plugin(splitter, {writeToDir: dest+'/js/'+opts.filename,verbose:true})
+
       buildStream = buildStream.pipe(gulp.dest(dest))
+
     })
 
     return buildStream

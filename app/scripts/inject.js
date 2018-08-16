@@ -45,15 +45,17 @@
     iframe.id = "app-content-iframe"
     document.body.appendChild(tint);
     document.body.appendChild(wrapper);
+    let f = function (message) {
+      if (message && message.hideAnimation) {
+        loading.remove()
+      }
+    };
     wrapper.appendChild(iframe)
     // wrapper.onmouseout=function () {
     //   this.hidden=true
     // }
-    chrome.runtime.onMessage.addListener(function (message) {
-      if (message && message.hideAnimation) {
-        loading.remove()
-      }
-    })
+
+    chrome.runtime.onMessage.addListener(f)
   }
   else {
     if (d.hidden) {

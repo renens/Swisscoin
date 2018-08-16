@@ -9,6 +9,9 @@
     background-image: linear-gradient( rgba(0,0,0,.2), rgba(0,0,0,.2) ), url(assets/bg2.png);
 }
 
+body{
+  font-family: "DejaVu Sans", Arial, sans-serif;
+}
 
 .background-wave .wave{
   width: 1400px;

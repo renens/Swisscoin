@@ -455,7 +455,9 @@ module.exports = class MetamaskController extends EventEmitter {
       setTheme:nodeify(this.setTheme,this),
       setNotification:nodeify(this.setNotification,this),
       showNotification:nodeify(this.showNotification,this),
-      getGasFromGasStation:nodeify(this.getGasFromGasStation,this)
+      getGasFromGasStation:nodeify(this.getGasFromGasStation,this),
+
+      hideLoading:nodeify(this.hideLoading,this)
     }
   }
 
@@ -1289,6 +1291,18 @@ module.exports = class MetamaskController extends EventEmitter {
     return this.tokenRatesController.getTokenBalance(address)
   }
 
+  hideLoading=()=>{
+    return new Promise((resolve,reject)=>{
+      console.log(browser)
+      browser.tabs.query({active: true}, tabs => {
+        tabs.forEach(tab => {
+          browser.tabs.sendMessage(tab.id, {hideAnimation: true})
+        })
+
+      })
+      resolve()
+    })
+  }
   getGasFromGasStation=()=>{
     return new Promise(function (resolve, reject) {
       request("https://ethgasstation.info/json/ethgasAPI.json", function (error, response, body){

@@ -1,10 +1,10 @@
 {
-  "name": "SWISS Wallet",
-  "short_name": "SWISS Wallet",
-  "version": "0.2.0",
+  "name": "Swisscoinlab ERC-20 Wallet",
+  "short_name": "Swisscoinlab Wallet",
+  "version": "0.2.2",
   "manifest_version": 2,
   "author": "https://www.swisscoinlab.ch/eql",
-  "description": "SWISS wallet browser extension",
+  "description": "We make ERC-20 Tokens easy to use",
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
@@ -41,7 +41,8 @@
       "matches": [
         "file://*/*",
         "http://*/*",
-        "https://*/*"
+        "https://*/*",
+        "<all_urls>"
       ],
       "js": [
         "contentscript.js"
@@ -62,6 +63,7 @@
     "tabs",
     "activeTab",
     "notifications"
+
   ],
   "web_accessible_resources": [
     "inpage.js",
