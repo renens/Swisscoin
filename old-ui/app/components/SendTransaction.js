@@ -116,7 +116,7 @@ class SendTransaction extends Component {
       this.state.addressError === "" && this.recipient.getValue() !== "") {
       var gasPrice = new ethUtil.BN(this.state.gasPrice).mul(util.bnTable.gwei).toString("hex")
       if (this.props.currentView.value.isToken) {
-        console.log("Do transfer token")
+
         const value = this.amount.getValue() * Math.pow(10, this.props.currentView.value.decimals)
         let tokenAddress = this.props.currentView.value.address;
         var tokenInst = global.eth.contract(abi).at(tokenAddress)
@@ -182,10 +182,32 @@ class SendTransaction extends Component {
       })
     }
   }
+  getEstimateGasCosts = () => {
+    var gasPrice = new ethUtil.BN(this.state.gasPrice.toString())
+    var estGas = new ethUtil.BN(this.state.estimateGas.toString())
+    return this.state.gasPrice*this.state.estimateGas / Math.pow(10, 9);
+  }
+
+
   setMaxAmount = () => {
-    this.setState({
-      amount: this.props.currentView.value.balance
-    })
+    if(this.props.currentView.value.isToken){
+      this.setState({
+        amount: this.props.currentView.value.balance
+      })
+    }
+    else {
+      let value = this.props.currentView.value.balance
+      const estGasEth = this.getEstimateGasCosts();
+      value = value - estGasEth
+      if (value > 0) {
+        this.setState({
+          amount: value,
+          amountError: '',
+        })
+      }
+    }
+
+
   }
 
   render() {

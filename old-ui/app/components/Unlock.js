@@ -44,7 +44,7 @@ class Unlock extends Component {
           <img className="float floating-logos float-5" src="./images/status-logo.png" role="presentation" />
         </div>
         <div className="logo" />
-        <div className="description login-info">
+        <div className="description2 login-info">
           <div className="login-input-btn-container">
             <TextField
               id="password"

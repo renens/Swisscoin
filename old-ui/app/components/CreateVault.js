@@ -53,7 +53,6 @@ class CreateVault extends Component {
     })
   }
   changeBlock=()=>{
-    console.log("change block")
     this.props.changeBlock()
   }
   render() {

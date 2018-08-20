@@ -52,7 +52,6 @@ class BalanceItem extends Component {
   }
   formatNumber =(num,digits)=> {
     if(num) {
-      console.log(num )
       return new Intl.NumberFormat("en-US",{maximumFractionDigits:digits,minimumFractionDigits:0}).format(num);// num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1'")
     }
     else{

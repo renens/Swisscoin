@@ -266,6 +266,18 @@ img.float-5 {
   top:350px;
 }
 /*** Description ***/
+.description2 {
+  color: #000000;
+  font-weight: 400;
+  padding: 50px;
+  z-index: 1;
+  line-height: 25px;
+  text-align: center;
+  transform: translate3d(0, 0, 0);
+  letter-spacing: .05em;
+  font-size: 15px;
+  text-rendering: optimizeLegibility;
+}
 
 .description {
   color: #000000;

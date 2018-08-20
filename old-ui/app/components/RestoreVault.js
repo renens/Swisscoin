@@ -45,7 +45,6 @@ class RestoreVault extends Component {
     }
 
     var seed = this.seedWords.value.trim()
-    console.log(seed)
     // true if the string has more than a space between words.
     if (seed.split('  ').length > 1) {
       var warning = 'there can only be a space between words'

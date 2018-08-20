@@ -32,7 +32,6 @@ class Accounts extends Component {
   }
 
   setDefaultAccount = (val) => {
-    console.log(val)
     const _this=this
     this.props.dispatch(actions.setSelectedAddress(val)).then(function(){
       _this.props.dispatch(actions.goHome())
