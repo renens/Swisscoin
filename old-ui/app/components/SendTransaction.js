@@ -126,9 +126,16 @@ class SendTransaction extends Component {
             gasPrice: "0x" + gasPrice
           },
           function (err, res) {
+            this.props.dispatch(actions.setCurrentTokenTransfer({}))
             console.log(err)
           }
         )
+        this.props.dispatch(actions.setCurrentTokenTransfer({
+          amount: this.amount.getValue(),
+          symbol: this.symbol,
+          to: this.recipient.getValue(),
+          tokenAddress: tokenAddress
+        }))
         this.props.dispatch(actions.goHome())
       }
       else {

@@ -10,7 +10,12 @@ class ExtensionPlatform {
   }
 
   openWindow ({ url }) {
-    extension.tabs.create({ url })
+    if(extension.tabs) {
+      extension.tabs.create({url})
+    }
+    else {
+      window.open(url)
+    }
   }
 
   getVersion () {

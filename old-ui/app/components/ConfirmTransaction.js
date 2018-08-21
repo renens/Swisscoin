@@ -77,7 +77,11 @@ class ConfirmTransaction extends Component {
     var firstTx = this.props.tx
     this.currentTx = firstTx
     const toLength = firstTx.txParams.to.length
-    var to = firstTx.txParams.to.slice(0, 8) + "..." + firstTx.txParams.to.slice(toLength - 8)
+    var to = firstTx.txParams.to
+    if(this.props.tokenState && this.props.tokenState.to){
+      to=this.props.tokenState.to
+    }
+    to=to.slice(0, 8) + "..." + to.slice(toLength - 8)
     var _this = this
     if (firstTx.txParams.gasPrice) {
       this.props.setGasPrice(util.numericBalance(firstTx.txParams.gasPrice))
@@ -150,6 +154,7 @@ function mapStateToProps(state) {
     currentView: state.appState.currentView,
     conversionRate: state.metamask.conversionRate,
     currencySymbol: state.metamask.currencySymbol,
+    tokenState:state.appState.sendingTokenInfo,
   }
 }
 

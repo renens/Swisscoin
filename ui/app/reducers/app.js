@@ -673,7 +673,10 @@ function reduceApp (state, action) {
       return extend(appState, {
         isMouseUser: action.value,
       })
-
+    case actions.TOKEN_INFO:
+      return extend(appState, {
+        sendingTokenInfo: action.value,
+      })
     default:
       return appState
   }

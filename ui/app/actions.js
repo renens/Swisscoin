@@ -282,7 +282,9 @@ var actions = {
   isTutorialReaded,
   getTokenInfo:getTokenInfo,
   getTokenBalance:getTokenBalance,
-  hideLoading
+  hideLoading,
+  setCurrentTokenTransfer,
+  TOKEN_INFO:'TOKEN_INFO'
 }
 
 module.exports = actions
@@ -2063,6 +2065,12 @@ function setNetworkEndpoints(networkEndpointType) {
   }
 }
 
+function setCurrentTokenTransfer(tokenInfo) {
+  return{
+    type:actions.TOKEN_INFO,
+    value:tokenInfo
+  }
+}
 function updateNetworkEndpointType(networkEndpointType) {
   return {
     type: actions.UPDATE_NETWORK_ENDPOINT_TYPE,
